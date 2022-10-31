@@ -342,7 +342,7 @@
                         if (data.products.length) {
                             $(data.products).each(function (index, product) {
                                 var html = '<tr class="product-row">';
-                                  html += '<td class="highlightable text-center"><input type="checkbox" name="select[]" value="' + product.product_id + '"></td>';
+                                  html += '<td class="highlightable text-center"><input type="checkbox" name="select[]" value="' + product.extension_id + '"></td>';
                                   html += '<td class="highlightable text-center"><img class="img-thumbnail" src="' + product.image + '" alt="' + product.name + '"/></td>';
                                   html += '<td class="highlightable text-left visible-lg">' + product.name + '</td>';
                                   html += '<td class="highlightable text-left">' + product.model + '</td>';
@@ -354,7 +354,7 @@
                                   html += '<td class="highlightable text-left no-wrap">' + makeCampaigns(product.campaigns) + '</td>';
                                   html += '<td class="highlightable text-center">' + makeDestinationStatus(product.destination_status) + '</td>';
                                   html += '<td class="highlightable text-center">' + makeIssuesButton(product.has_issues, product.url_issues) + '</td>';
-                                  html += '<td class="highlightable text-right"><button class="btn ' + (product.is_modified ? "btn-default" : "btn-warning") + '" data-toggle="tooltip" title="' + (product.is_modified ? "{{ button_product_edit }}" : "{{ button_product_set }}") + '" data-product-id="' + product.product_id + '" data-product-advertise-google-id="' + product.product_advertise_google_id + '"><i class="fa fa-cog"></i></button></td>';
+                                  html += '<td class="highlightable text-right"><button class="btn ' + (product.is_modified ? "btn-default" : "btn-warning") + '" data-toggle="tooltip" title="' + (product.is_modified ? "{{ button_product_edit }}" : "{{ button_product_set }}") + '" data-product-id="' + product.extension_id + '" data-product-advertise-google-id="' + product.product_advertise_google_id + '"><i class="fa fa-cog"></i></button></td>';
                                 html += '</tr>';
 
                                 $(selector.list).append(html);
@@ -656,7 +656,7 @@
                     data: $(this).attr('data-product-advertise-google-id')
                 },
                 success_callback: function (data) {
-                    $(selector.popup.product.button_show + '[data-product-id=' + data.product_id + ']').removeClass('btn-warning').addClass('btn-default');
+                    $(selector.popup.product.button_show + '[data-product-id=' + data.extension_id + ']').removeClass('btn-warning').addClass('btn-default');
                 }
             });
         }).on('click', selector.button_bulk_edit, function (e) {
@@ -751,7 +751,7 @@
                         response($.map(json, function (item) {
                             return {
                                 label: item['name'],
-                                value: item['product_id']
+                                value: item['extension_id']
                             }
                         }));
                     }
@@ -771,7 +771,7 @@
                         response($.map(json, function (item) {
                             return {
                                 label: item['model'],
-                                value: item['product_id']
+                                value: item['extension_id']
                             }
                         }));
                     }

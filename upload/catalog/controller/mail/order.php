@@ -50,7 +50,7 @@ class ControllerMailOrder extends Controller {
 
         foreach ($order_products as $order_product) {
             // Check if there are any linked downloads
-            $product_download_query = $this->db->query("SELECT COUNT(*) AS `total` FROM `" . DB_PREFIX . "product_to_download` WHERE `product_id` = '" . (int)$order_product['product_id'] . "'");
+            $product_download_query = $this->db->query("SELECT COUNT(*) AS `total` FROM `" . DB_PREFIX . "product_to_download` WHERE `extension_id` = '" . (int)$order_product['extension_id'] . "'");
 
             if ($product_download_query->row['total']) {
                 $download_status = true;
@@ -211,7 +211,7 @@ class ControllerMailOrder extends Controller {
         foreach ($order_products as $order_product) {
             $option_data = [];
 
-            $order_options = $this->model_checkout_order->getOrderOptions($order_info['order_id'], $order_product['order_product_id']);
+            $order_options = $this->model_checkout_order->getOrderOptions($order_info['order_id'], $order_product['order_extension_id']);
 
             foreach ($order_options as $order_option) {
                 if ($order_option['type'] != 'file') {
@@ -413,7 +413,7 @@ class ControllerMailOrder extends Controller {
             foreach ($order_products as $order_product) {
                 $option_data = [];
 
-                $order_options = $this->model_checkout_order->getOrderOptions($order_info['order_id'], $order_product['order_product_id']);
+                $order_options = $this->model_checkout_order->getOrderOptions($order_info['order_id'], $order_product['order_extension_id']);
 
                 foreach ($order_options as $order_option) {
                     if ($order_option['type'] != 'file') {

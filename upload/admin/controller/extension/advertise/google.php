@@ -1449,7 +1449,7 @@ class ControllerExtensionAdvertiseGoogle extends Controller {
         $operand_info = null;
         $form_data = null;
         $filter_data = null;
-        $product_ids = [];
+        $extension_ids = [];
 
         if ($this->request->post['operand']['type'] == 'single') {
             $product_advertise_google_id = $this->request->post['operand']['data'];
@@ -1457,22 +1457,22 @@ class ControllerExtensionAdvertiseGoogle extends Controller {
             $product_info = $this->model_extension_advertise_google->getProductByProductAdvertiseGoogleId($product_advertise_google_id);
 
             if ($product_info !== null) {
-                $json['product_id'] = $product_info['product_id'];
+                $json['extension_id'] = $product_info['extension_id'];
 
                 // Required variables:
                 $operand_info = [
                     'title' => sprintf($this->language->get('text_popup_title_single'), $product_info['name'], $product_info['model'])
                 ];
 
-                $required_fields = $this->model_extension_advertise_google->getRequiredFieldsByProductIds([$product_info['product_id']], $this->store_id);
+                $required_fields = $this->model_extension_advertise_google->getRequiredFieldsByProductIds([$product_info['extension_id']], $this->store_id);
 
                 if ($this->request->post['action'] == 'submit') {
                     $form_data = array_merge($this->request->post['form'], [
-                        'product_id' => $product_info['product_id']
+                        'extension_id' => $product_info['extension_id']
                     ]);
                 }
 
-                $options = $this->model_extension_advertise_google->getProductOptionsByProductIds([$product_info['product_id']]);
+                $options = $this->model_extension_advertise_google->getProductOptionsByProductIds([$product_info['extension_id']]);
 
                 $default_form_data = $this->model_extension_advertise_google->getProductAdvertiseGoogle($product_advertise_google_id);
             }
@@ -1495,22 +1495,22 @@ class ControllerExtensionAdvertiseGoogle extends Controller {
 
                 $options = $this->model_extension_advertise_google->getProductOptionsByFilter($filter_data);
             } else {
-                $product_ids = $this->request->post['operand']['data']['select'];
+                $extension_ids = $this->request->post['operand']['data']['select'];
 
-                $total_products = count($product_ids);
+                $total_products = count($extension_ids);
 
                 // Required variables:
                 $operand_info = [
                     'title' => sprintf($this->language->get('text_popup_title_multiple'), $total_products)
                 ];
 
-                $required_fields = $this->model_extension_advertise_google->getRequiredFieldsByProductIds($product_ids, $this->store_id);
+                $required_fields = $this->model_extension_advertise_google->getRequiredFieldsByProductIds($extension_ids, $this->store_id);
 
                 if ($this->request->post['action'] == 'submit') {
                     $form_data = $this->request->post['form'];
                 }
 
-                $options = $this->model_extension_advertise_google->getProductOptionsByProductIds($product_ids);
+                $options = $this->model_extension_advertise_google->getProductOptionsByProductIds($extension_ids);
             }
 
             $default_form_data = [
@@ -1545,8 +1545,8 @@ class ControllerExtensionAdvertiseGoogle extends Controller {
                     if (!empty($this->request->post['operand']['data']['all_pages'])) {
                         $this->model_extension_advertise_google->updateMultipleProductFields($filter_data, $form_data);
                     } else {
-                        foreach ($product_ids as $product_id) {
-                            $form_data['product_id'] = (int)$product_id;
+                        foreach ($extension_ids as $extension_id) {
+                            $form_data['extension_id'] = (int)$extension_id;
 
                             $this->model_extension_advertise_google->updateSingleProductFields($form_data);
                         }
@@ -1720,9 +1720,9 @@ class ControllerExtensionAdvertiseGoogle extends Controller {
         // Google
         $this->load->model('extension/advertise/google');
 
-        $product_id = (isset($this->request->get['product_id']) ? (int)$this->request->get['product_id'] : 0);
+        $extension_id = (isset($this->request->get['extension_id']) ? (int)$this->request->get['extension_id'] : 0);
 
-        $product_issues = $this->model_extension_advertise_google->getProductIssues($product_id, $this->store_id);
+        $product_issues = $this->model_extension_advertise_google->getProductIssues($extension_id, $this->store_id);
 
         if ($product_issues !== null) {
             $json['title'] = sprintf($this->language->get('text_popup_title_single'), $product_issues['name'], $product_issues['model']);
@@ -1797,11 +1797,11 @@ class ControllerExtensionAdvertiseGoogle extends Controller {
         // Google
         $this->load->model('extension/advertise/google');
 
-        $final_product_id = $this->model_extension_advertise_google->getFinalProductId();
+        $final_extension_id = $this->model_extension_advertise_google->getFinalProductId();
 
-        if (!empty($final_product_id)) {
-            foreach ($this->model_catalog_product->getProductStores($final_product_id) as $store_id) {
-                $this->model_extension_advertise_google->insertNewProducts([$final_product_id], $store_id);
+        if (!empty($final_extension_id)) {
+            foreach ($this->model_catalog_product->getProductStores($final_extension_id) as $store_id) {
+                $this->model_extension_advertise_google->insertNewProducts([$final_extension_id], $store_id);
             }
         }
     }
@@ -1913,7 +1913,7 @@ class ControllerExtensionAdvertiseGoogle extends Controller {
 
         return [
             'product_advertise_google_id' => (int)$row['product_advertise_google_id'],
-            'product_id'                  => (int)$row['product_id'],
+            'extension_id'                  => (int)$row['extension_id'],
             'image'                       => $image,
             'name'                        => htmlentities(html_entity_decode($row['name'], ENT_QUOTES, 'UTF-8'), ENT_QUOTES, 'UTF-8'),
             'model'                       => $row['model'],
@@ -1925,8 +1925,8 @@ class ControllerExtensionAdvertiseGoogle extends Controller {
             'destination_status'          => $row['destination_status'],
             'is_modified'                 => (bool)$row['is_modified'],
             'has_issues'                  => (bool)$row['has_issues'],
-            'url_issues'                  => html_entity_decode($this->url->link('extension/advertise/google/popup_issues', 'store_id=' . $this->store_id . '&user_token=' . $this->session->data['user_token'] . '&product_id=' . $row['product_id'], true), ENT_QUOTES, 'UTF-8'),
-            'campaigns'                   => $this->model_extension_advertise_google->getProductCampaigns((int)$row['product_id'], $this->store_id)
+            'url_issues'                  => html_entity_decode($this->url->link('extension/advertise/google/popup_issues', 'store_id=' . $this->store_id . '&user_token=' . $this->session->data['user_token'] . '&extension_id=' . $row['extension_id'], true), ENT_QUOTES, 'UTF-8'),
+            'campaigns'                   => $this->model_extension_advertise_google->getProductCampaigns((int)$row['extension_id'], $this->store_id)
         ];
     }
 

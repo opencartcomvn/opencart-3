@@ -94,7 +94,7 @@ class ControllerAccountTracking extends Controller {
             foreach ($results as $result) {
                 $json[] = [
                     'name' => strip_tags(html_entity_decode($result['name'], ENT_QUOTES, 'UTF-8')),
-                    'link' => str_replace('&amp;', '&', $this->url->link('product/product', 'product_id=' . $result['product_id'] . '&tracking=' . $tracking))
+                    'link' => str_replace('&amp;', '&', $this->url->link('product/product', 'extension_id=' . $result['extension_id'] . '&tracking=' . $tracking))
                 ];
             }
         }

@@ -164,11 +164,11 @@ $(document).ready(function() {
 
 // Cart add remove functions
 var cart = {
-	'add': function(product_id, quantity) {
+	'add': function(extension_id, quantity) {
 		$.ajax({
 			url: 'index.php?route=checkout/cart/add',
 			type: 'post',
-			data: 'product_id=' + product_id + '&quantity=' + (typeof(quantity) != 'undefined' ? quantity : 1),
+			data: 'extension_id=' + extension_id + '&quantity=' + (typeof(quantity) != 'undefined' ? quantity : 1),
 			dataType: 'json',
 			beforeSend: function() {
 				$('#cart > button').button('loading');
@@ -297,11 +297,11 @@ var voucher = {
 }
 
 var wishlist = {
-	'add': function(product_id) {
+	'add': function(extension_id) {
 		$.ajax({
 			url: 'index.php?route=account/wishlist/add',
 			type: 'post',
-			data: 'product_id=' + product_id,
+			data: 'extension_id=' + extension_id,
 			dataType: 'json',
 			success: function(json) {
 				$('.alert-dismissible').remove();
@@ -330,11 +330,11 @@ var wishlist = {
 }
 
 var compare = {
-	'add': function(product_id) {
+	'add': function(extension_id) {
 		$.ajax({
 			url: 'index.php?route=product/compare/add',
 			type: 'post',
-			data: 'product_id=' + product_id,
+			data: 'extension_id=' + extension_id,
 			dataType: 'json',
 			success: function(json) {
 				$('.alert-dismissible').remove();

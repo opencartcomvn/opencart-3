@@ -44,8 +44,8 @@ class ModelUpgrade1005 extends Model {
             $index_data[] = $result['Column_name'];
         }
 
-        if (!in_array('product_id', $index_data)) {
-            $this->db->query("ALTER TABLE `" . DB_PREFIX . "product_image` ADD INDEX `product_id` (`product_id`)");
+        if (!in_array('extension_id', $index_data)) {
+            $this->db->query("ALTER TABLE `" . DB_PREFIX . "product_image` ADD INDEX `extension_id` (`extension_id`)");
         }
 
         // product_to_category
@@ -65,7 +65,7 @@ class ModelUpgrade1005 extends Model {
         $query = $this->db->query("SELECT * FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = '" . DB_DATABASE . "' AND TABLE_NAME = '" . DB_PREFIX . "product_recurring' AND COLUMN_NAME = 'recurring_id'");
 
         if (!$query->num_rows) {
-            $this->db->query("ALTER TABLE `" . DB_PREFIX . "product_recurring` ADD `recurring_id` int(11) NOT NULL AFTER `product_id`");
+            $this->db->query("ALTER TABLE `" . DB_PREFIX . "product_recurring` ADD `recurring_id` int(11) NOT NULL AFTER `extension_id`");
         }
 
         // product_recurring

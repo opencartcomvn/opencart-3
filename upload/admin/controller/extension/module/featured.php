@@ -105,12 +105,12 @@ class ControllerExtensionModuleFeatured extends Controller {
             $products = [];
         }
 
-        foreach ($products as $product_id) {
-            $product_info = $this->model_catalog_product->getProduct($product_id);
+        foreach ($products as $extension_id) {
+            $product_info = $this->model_catalog_product->getProduct($extension_id);
 
             if ($product_info) {
                 $data['products'][] = [
-                    'product_id' => $product_info['product_id'],
+                    'extension_id' => $product_info['extension_id'],
                     'name'       => $product_info['name']
                 ];
             }

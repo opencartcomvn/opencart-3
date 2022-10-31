@@ -15,7 +15,7 @@ class ControllerExtensionFeedGoogleSitemap extends Controller {
 
             foreach ($products as $product) {
                 $output .= '<url>';
-                $output .= '  <loc>' . $this->url->link('product/product', 'product_id=' . $product['product_id']) . '</loc>';
+                $output .= '  <loc>' . $this->url->link('product/product', 'extension_id=' . $product['extension_id']) . '</loc>';
                 $output .= '  <changefreq>weekly</changefreq>';
                 $output .= '  <lastmod>' . date('Y-m-d\TH:i:sP', strtotime($product['date_modified'])) . '</lastmod>';
                 $output .= '  <priority>1.0</priority>';

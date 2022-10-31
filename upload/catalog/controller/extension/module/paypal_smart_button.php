@@ -29,7 +29,7 @@ class ControllerExtensionModulePayPalSmartButton extends Controller {
             $currency_value = $this->config->get('payment_paypal_currency_value');
             $decimal_place = $paypal_setting['currency'][$currency_code]['decimal_place'];
 
-            if ($setting['page']['product']['status'] && ($this->request->get['route'] == 'product/product') && isset($this->request->get['product_id'])) {
+            if ($setting['page']['product']['status'] && ($this->request->get['route'] == 'product/product') && isset($this->request->get['extension_id'])) {
                 $data['insert_tag'] = html_entity_decode($setting['page']['product']['insert_tag']);
                 $data['insert_type'] = $setting['page']['product']['insert_type'];
                 $data['button_align'] = $setting['page']['product']['button_align'];
@@ -49,12 +49,12 @@ class ControllerExtensionModulePayPalSmartButton extends Controller {
                 $data['message_flex_ratio'] = $setting['page']['product']['message_flex_ratio'];
                 $data['message_placement'] = 'product';
 
-                $product_id = (int)$this->request->get['product_id'];
+                $extension_id = (int)$this->request->get['extension_id'];
 
                 // Products
                 $this->load->model('catalog/product');
 
-                $product_info = $this->model_catalog_product->getProduct($product_id);
+                $product_info = $this->model_catalog_product->getProduct($extension_id);
 
                 if ($product_info) {
                     if ($this->customer->isLogged() || !$this->config->get('config_customer_price')) {
@@ -143,16 +143,16 @@ class ControllerExtensionModulePayPalSmartButton extends Controller {
 
         $data['order_id'] = '';
 
-        if (isset($this->request->post['product_id'])) {
-            $product_id = (int)$this->request->post['product_id'];
+        if (isset($this->request->post['extension_id'])) {
+            $extension_id = (int)$this->request->post['extension_id'];
         } else {
-            $product_id = 0;
+            $extension_id = 0;
         }
 
         // Products
         $this->load->model('catalog/product');
 
-        $product_info = $this->model_catalog_product->getProduct($product_id);
+        $product_info = $this->model_catalog_product->getProduct($extension_id);
 
         if ($product_info) {
             if (isset($this->request->post['quantity'])) {
@@ -167,7 +167,7 @@ class ControllerExtensionModulePayPalSmartButton extends Controller {
                 $option = [];
             }
 
-            $product_options = $this->model_catalog_product->getProductOptions($this->request->post['product_id']);
+            $product_options = $this->model_catalog_product->getProductOptions($this->request->post['extension_id']);
 
             foreach ($product_options as $product_option) {
                 if ($product_option['required'] && empty($option[$product_option['product_option_id']])) {
@@ -181,7 +181,7 @@ class ControllerExtensionModulePayPalSmartButton extends Controller {
                 $subscription_plan_id = 0;
             }
 
-            $subscription_plans = $this->model_catalog_product->getSubscriptions($product_info['product_id']);
+            $subscription_plans = $this->model_catalog_product->getSubscriptions($product_info['extension_id']);
 
             if ($subscription_plans) {
                 $subscription_plan_ids = [];
@@ -196,8 +196,8 @@ class ControllerExtensionModulePayPalSmartButton extends Controller {
             }
 
             if (!$errors) {
-                if (!$this->model_extension_module_paypal_smart_button->hasProductInCart($this->request->post['product_id'], $option, $subscription_plan_id)) {
-                    $this->cart->add($this->request->post['product_id'], $quantity, $option, $subscription_plan_id);
+                if (!$this->model_extension_module_paypal_smart_button->hasProductInCart($this->request->post['extension_id'], $option, $subscription_plan_id)) {
+                    $this->cart->add($this->request->post['extension_id'], $quantity, $option, $subscription_plan_id);
                 }
 
                 // Unset all shipping and payment methods
@@ -250,7 +250,7 @@ class ControllerExtensionModulePayPalSmartButton extends Controller {
                 $item_info[] = [
                     'name'        => $product['name'],
                     'sku'         => $product['model'],
-                    'url'         => $this->url->link('product/product', 'product_id=' . $product['product_id'], true),
+                    'url'         => $this->url->link('product/product', 'extension_id=' . $product['extension_id'], true),
                     'quantity'    => $product['quantity'],
                     'unit_amount' => [
                         'currency_code' => $currency_code,
@@ -629,7 +629,7 @@ class ControllerExtensionModulePayPalSmartButton extends Controller {
             $product_total = 0;
 
             foreach ($products as $product_2) {
-                if ($product_2['product_id'] == $product['product_id']) {
+                if ($product_2['extension_id'] == $product['extension_id']) {
                     $product_total += $product_2['quantity'];
                 }
             }
@@ -713,7 +713,7 @@ class ControllerExtensionModulePayPalSmartButton extends Controller {
                 'reward'       => ($product['reward'] ? sprintf($this->language->get('text_points'), $product['reward']) : ''),
                 'price'        => $price,
                 'total'        => $total,
-                'href'         => $this->url->link('product/product', 'product_id=' . $product['product_id'], true)
+                'href'         => $this->url->link('product/product', 'extension_id=' . $product['extension_id'], true)
             ];
         }
 
@@ -1131,7 +1131,7 @@ class ControllerExtensionModulePayPalSmartButton extends Controller {
                 }
 
                 $order_data['products'][] = [
-                    'product_id' => $product['product_id'],
+                    'extension_id' => $product['extension_id'],
                     'name'       => $product['name'],
                     'model'      => $product['model'],
                     'option'     => $option_data,

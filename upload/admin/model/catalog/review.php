@@ -1,7 +1,7 @@
 <?php
 class ModelCatalogReview extends Model {
     public function addReview(array $data): int {
-        $this->db->query("INSERT INTO `" . DB_PREFIX . "review` SET `author` = '" . $this->db->escape((string)$data['author']) . "', `product_id` = '" . (int)$data['product_id'] . "', `text` = '" . $this->db->escape(strip_tags((string)$data['text'])) . "', `rating` = '" . (int)$data['rating'] . "', `status` = '" . (bool)(isset($data['status']) ? $data['status'] : 0) . "', `date_added` = '" . $this->db->escape((string)$data['date_added']) . "'");
+        $this->db->query("INSERT INTO `" . DB_PREFIX . "review` SET `author` = '" . $this->db->escape((string)$data['author']) . "', `extension_id` = '" . (int)$data['extension_id'] . "', `text` = '" . $this->db->escape(strip_tags((string)$data['text'])) . "', `rating` = '" . (int)$data['rating'] . "', `status` = '" . (bool)(isset($data['status']) ? $data['status'] : 0) . "', `date_added` = '" . $this->db->escape((string)$data['date_added']) . "'");
 
         $review_id = $this->db->getLastId();
 
@@ -11,7 +11,7 @@ class ModelCatalogReview extends Model {
     }
 
     public function editReview(int $review_id, array $data): void {
-        $this->db->query("UPDATE `" . DB_PREFIX . "review` SET `author` = '" . $this->db->escape((string)$data['author']) . "', `product_id` = '" . (int)$data['product_id'] . "', `text` = '" . $this->db->escape(strip_tags((string)$data['text'])) . "', `rating` = '" . (int)$data['rating'] . "', `status` = '" . (bool)(isset($data['status']) ? $data['status'] : 0) . "', `date_added` = '" . $this->db->escape((string)$data['date_added']) . "', `date_modified` = NOW() WHERE `review_id` = '" . (int)$review_id . "'");
+        $this->db->query("UPDATE `" . DB_PREFIX . "review` SET `author` = '" . $this->db->escape((string)$data['author']) . "', `extension_id` = '" . (int)$data['extension_id'] . "', `text` = '" . $this->db->escape(strip_tags((string)$data['text'])) . "', `rating` = '" . (int)$data['rating'] . "', `status` = '" . (bool)(isset($data['status']) ? $data['status'] : 0) . "', `date_added` = '" . $this->db->escape((string)$data['date_added']) . "', `date_modified` = NOW() WHERE `review_id` = '" . (int)$review_id . "'");
 
         $this->cache->delete('product');
     }
@@ -23,13 +23,13 @@ class ModelCatalogReview extends Model {
     }
 
     public function getReview(int $review_id): array {
-        $query = $this->db->query("SELECT DISTINCT *, (SELECT pd.`name` FROM `" . DB_PREFIX . "product_description` pd WHERE pd.`product_id` = r.`product_id` AND pd.`language_id` = '" . (int)$this->config->get('config_language_id') . "') AS `product` FROM `" . DB_PREFIX . "review` r WHERE r.`review_id` = '" . (int)$review_id . "'");
+        $query = $this->db->query("SELECT DISTINCT *, (SELECT pd.`name` FROM `" . DB_PREFIX . "product_description` pd WHERE pd.`extension_id` = r.`extension_id` AND pd.`language_id` = '" . (int)$this->config->get('config_language_id') . "') AS `product` FROM `" . DB_PREFIX . "review` r WHERE r.`review_id` = '" . (int)$review_id . "'");
 
         return $query->row;
     }
 
     public function getReviews(array $data = []): array {
-        $sql = "SELECT r.`review_id`, pd.`name`, r.`author`, r.`rating`, r.`status`, r.`date_added` FROM `" . DB_PREFIX . "review` r LEFT JOIN `" . DB_PREFIX . "product_description` pd ON (r.`product_id` = pd.`product_id`) WHERE pd.`language_id` = '" . (int)$this->config->get('config_language_id') . "'";
+        $sql = "SELECT r.`review_id`, pd.`name`, r.`author`, r.`rating`, r.`status`, r.`date_added` FROM `" . DB_PREFIX . "review` r LEFT JOIN `" . DB_PREFIX . "product_description` pd ON (r.`extension_id` = pd.`extension_id`) WHERE pd.`language_id` = '" . (int)$this->config->get('config_language_id') . "'";
 
         if (!empty($data['filter_product'])) {
             $sql .= " AND pd.`name` LIKE '" . $this->db->escape((string)$data['filter_product'] . '%') . "'";
@@ -89,7 +89,7 @@ class ModelCatalogReview extends Model {
     }
 
     public function getTotalReviews(array $data = []): int {
-        $sql = "SELECT COUNT(*) AS `total` FROM `" . DB_PREFIX . "review` r LEFT JOIN `" . DB_PREFIX . "product_description` pd ON (r.`product_id` = pd.`product_id`) WHERE pd.`language_id` = '" . (int)$this->config->get('config_language_id') . "'";
+        $sql = "SELECT COUNT(*) AS `total` FROM `" . DB_PREFIX . "review` r LEFT JOIN `" . DB_PREFIX . "product_description` pd ON (r.`extension_id` = pd.`extension_id`) WHERE pd.`language_id` = '" . (int)$this->config->get('config_language_id') . "'";
 
         if (!empty($data['filter_product'])) {
             $sql .= " AND pd.`name` LIKE '" . $this->db->escape((string)$data['filter_product'] . '%') . "'";

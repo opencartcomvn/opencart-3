@@ -1,9 +1,9 @@
 <?php
 class ModelExtensionAdvertiseGoogle extends Model {
-    public function getHumanReadableCategory($product_id, $store_id) {
+    public function getHumanReadableCategory($extension_id, $store_id) {
         $this->load->config('googleshopping/googleshopping');
 
-        $google_category_result = $this->db->query("SELECT `google_product_category` FROM `" . DB_PREFIX . "googleshopping_product` pag WHERE pag.`product_id` = '" . (int)$product_id . "' AND pag.`store_id` = '" . (int)$store_id . "'");
+        $google_category_result = $this->db->query("SELECT `google_product_category` FROM `" . DB_PREFIX . "googleshopping_product` pag WHERE pag.`extension_id` = '" . (int)$extension_id . "' AND pag.`store_id` = '" . (int)$store_id . "'");
 
         if ($google_category_result->num_rows > 0) {
             $google_category_id = $google_category_result->row['google_product_category'];
@@ -14,7 +14,7 @@ class ModelExtensionAdvertiseGoogle extends Model {
             }
         }
 
-        $oc_category_result = $this->db->query("SELECT c.`category_id` FROM `" . DB_PREFIX . "product_to_category` p2c LEFT JOIN `" . DB_PREFIX . "category` c ON (c.`category_id` = p2c.`category_id`) WHERE p2c.`product_id` = '" . (int)$product_id . "' LIMIT 0,1");
+        $oc_category_result = $this->db->query("SELECT c.`category_id` FROM `" . DB_PREFIX . "product_to_category` p2c LEFT JOIN `" . DB_PREFIX . "category` c ON (c.`category_id` = p2c.`category_id`) WHERE p2c.`extension_id` = '" . (int)$extension_id . "' LIMIT 0,1");
 
         if ($oc_category_result->num_rows > 0) {
             return $this->getHumanReadableOpenCartCategory((int)$oc_category_result->row['category_id']);
@@ -35,13 +35,13 @@ class ModelExtensionAdvertiseGoogle extends Model {
         return '';
     }
 
-    public function getSizeAndColorOptionMap($product_id, $store_id) {
-        $color_id = $this->getOptionId($product_id, $store_id, 'color');
-        $size_id = $this->getOptionId($product_id, $store_id, 'size');
+    public function getSizeAndColorOptionMap($extension_id, $store_id) {
+        $color_id = $this->getOptionId($extension_id, $store_id, 'color');
+        $size_id = $this->getOptionId($extension_id, $store_id, 'size');
 
-        $groups = $this->googleshopping->getGroups($product_id, $this->config->get('config_language_id'), $color_id, $size_id);
-        $colors = $this->googleshopping->getProductOptionValueNames($product_id, $this->config->get('config_language_id'), $color_id);
-        $sizes = $this->googleshopping->getProductOptionValueNames($product_id, $this->config->get('config_language_id'), $size_id);
+        $groups = $this->googleshopping->getGroups($extension_id, $this->config->get('config_language_id'), $color_id, $size_id);
+        $colors = $this->googleshopping->getProductOptionValueNames($extension_id, $this->config->get('config_language_id'), $color_id);
+        $sizes = $this->googleshopping->getProductOptionValueNames($extension_id, $this->config->get('config_language_id'), $size_id);
 
         $map = [
             'groups' => $groups,
@@ -96,7 +96,7 @@ class ModelExtensionAdvertiseGoogle extends Model {
     protected function getRemarketingProductId($product, $store_id) {
         $found_color = '';
         $found_size = '';
-        $option_map = $this->getSizeAndColorOptionMap($product['product_id'], $store_id);
+        $option_map = $this->getSizeAndColorOptionMap($product['extension_id'], $store_id);
 
         foreach ($product['option'] as $option) {
             if (!empty($option_map['colors']) && is_array($option_map['colors'])) {
@@ -125,8 +125,8 @@ class ModelExtensionAdvertiseGoogle extends Model {
         return null;
     }
 
-    protected function getOptionId($product_id, $store_id, $type) {
-        $sql = "SELECT pag.`" . $type . "` FROM `" . DB_PREFIX . "googleshopping_product` pag WHERE `product_id` = '" . (int)$product_id . "' AND `store_id` = '" . (int)$store_id . "'";
+    protected function getOptionId($extension_id, $store_id, $type) {
+        $sql = "SELECT pag.`" . $type . "` FROM `" . DB_PREFIX . "googleshopping_product` pag WHERE `extension_id` = '" . (int)$extension_id . "' AND `store_id` = '" . (int)$store_id . "'";
 
         $result = $this->db->query($sql);
 

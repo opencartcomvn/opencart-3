@@ -234,8 +234,8 @@ class ModelSaleOrder extends Model {
         return $query->rows;
     }
 
-    public function getOrderOptions(int $order_id, int $order_product_id): array {
-        $query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "order_option` WHERE `order_id` = '" . (int)$order_id . "' AND `order_product_id` = '" . (int)$order_product_id . "'");
+    public function getOrderOptions(int $order_id, int $order_extension_id): array {
+        $query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "order_option` WHERE `order_id` = '" . (int)$order_id . "' AND `order_extension_id` = '" . (int)$order_extension_id . "'");
 
         return $query->rows;
     }
@@ -457,8 +457,8 @@ class ModelSaleOrder extends Model {
     public function getEmailsByProductsOrdered(array $products, int $start, int $end): array {
         $implode = [];
 
-        foreach ($products as $product_id) {
-            $implode[] = "op.`product_id` = '" . (int)$product_id . "'";
+        foreach ($products as $extension_id) {
+            $implode[] = "op.`extension_id` = '" . (int)$extension_id . "'";
         }
 
         $query = $this->db->query("SELECT DISTINCT `email` FROM `" . DB_PREFIX . "order` o LEFT JOIN `" . DB_PREFIX . "order_product` op ON (o.`order_id` = op.`order_id`) WHERE (" . implode(" OR ", $implode) . ") AND o.`order_status_id` <> '0' LIMIT " . (int)$start . "," . (int)$end);
@@ -469,8 +469,8 @@ class ModelSaleOrder extends Model {
     public function getTotalEmailsByProductsOrdered(array $products): int {
         $implode = [];
 
-        foreach ($products as $product_id) {
-            $implode[] = "op.`product_id` = '" . (int)$product_id . "'";
+        foreach ($products as $extension_id) {
+            $implode[] = "op.`extension_id` = '" . (int)$extension_id . "'";
         }
 
         $query = $this->db->query("SELECT COUNT(DISTINCT `email`) AS `total` FROM `" . DB_PREFIX . "order` o LEFT JOIN `" . DB_PREFIX . "order_product` op ON (o.`order_id` = op.`order_id`) WHERE (" . implode(" OR ", $implode) . ") AND o.`order_status_id` <> '0'");

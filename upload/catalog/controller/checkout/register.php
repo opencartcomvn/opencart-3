@@ -101,7 +101,7 @@ class ControllerCheckoutRegister extends Controller {
             $product_total = 0;
 
             foreach ($products as $product_2) {
-                if ($product_2['product_id'] == $product['product_id']) {
+                if ($product_2['extension_id'] == $product['extension_id']) {
                     $product_total += $product_2['quantity'];
                 }
             }

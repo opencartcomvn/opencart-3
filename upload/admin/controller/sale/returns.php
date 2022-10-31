@@ -683,9 +683,9 @@ class ControllerSaleReturns extends Controller {
         }
 
         if (!empty($return_info)) {
-            $data['product_id'] = $return_info['product_id'];
+            $data['extension_id'] = $return_info['extension_id'];
         } else {
-            $data['product_id'] = '';
+            $data['extension_id'] = '';
         }
 
         if (!empty($return_info)) {

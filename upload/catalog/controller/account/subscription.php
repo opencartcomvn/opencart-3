@@ -166,7 +166,7 @@ class ControllerAccountSubscription extends Controller {
             }
 
             $data['order'] = $this->url->link('account/order/info', 'language=' . $this->config->get('config_language') . '&customer_token=' . $this->session->data['customer_token'] . '&order_id=' . $subscription_info['order_id']);
-            $data['product'] = $this->url->link('product/product', 'language=' . $this->config->get('config_language') . '&customer_token=' . $this->session->data['customer_token'] . '&product_id=' . $subscription_info['product_id']);
+            $data['product'] = $this->url->link('product/product', 'language=' . $this->config->get('config_language') . '&customer_token=' . $this->session->data['customer_token'] . '&extension_id=' . $subscription_info['extension_id']);
 
             // Extensions
             $this->load->model('setting/extension');

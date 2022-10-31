@@ -398,7 +398,7 @@ class ControllerSaleSubscription extends Controller {
         if (!empty($subscription_info)) {
             $this->load->model('sale/order');
 
-            $product_info = $this->model_sale_order->getProductByOrderProductId($subscription_info['order_id'], $subscription_info['order_product_id']);
+            $product_info = $this->model_sale_order->getProductByOrderProductId($subscription_info['order_id'], $subscription_info['order_extension_id']);
         }
 
         if (!empty($product_info['name'])) {
@@ -408,7 +408,7 @@ class ControllerSaleSubscription extends Controller {
         }
 
         if (!empty($product_info)) {
-            $data['product'] = $this->url->link('catalog/product/edit', 'user_token=' . $this->session->data['user_token'] . '&product_id=' . $product_info['product_id'], true);
+            $data['product'] = $this->url->link('catalog/product/edit', 'user_token=' . $this->session->data['user_token'] . '&extension_id=' . $product_info['extension_id'], true);
         } else {
             $data['product'] = '';
         }

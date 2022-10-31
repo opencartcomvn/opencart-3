@@ -71,8 +71,8 @@ class ControllerAccountLogin extends Controller {
                 // Wishlists
                 $this->load->model('account/wishlist');
 
-                foreach ($this->session->data['wishlist'] as $key => $product_id) {
-                    $this->model_account_wishlist->addWishlist($product_id);
+                foreach ($this->session->data['wishlist'] as $key => $extension_id) {
+                    $this->model_account_wishlist->addWishlist($extension_id);
 
                     unset($this->session->data['wishlist'][$key]);
                 }

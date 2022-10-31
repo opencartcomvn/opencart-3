@@ -102,7 +102,7 @@ class ModelExtensionPaymentPPExpress extends Model {
             $item_total += number_format($item_price * $item['quantity'], 2, '.', '');
 
             $data['L_PAYMENTREQUEST_0_QTY' . $i] = $item['quantity'];
-            $data['L_PAYMENTREQUEST_0_ITEMURL' . $i] = $this->url->link('product/product', 'product_id=' . $item['product_id']);
+            $data['L_PAYMENTREQUEST_0_ITEMURL' . $i] = $this->url->link('product/product', 'extension_id=' . $item['extension_id']);
 
             if ($this->config->get('config_cart_weight')) {
                 $weight = $this->weight->convert($item['weight'], $item['weight_class_id'], $this->config->get('config_weight_class_id'));

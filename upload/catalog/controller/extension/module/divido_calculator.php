@@ -1,7 +1,7 @@
 <?php
 class ControllerExtensionModuleDividoCalculator extends Controller {
     public function index(): bool|string {
-        if (!isset($this->request->get['product_id']) || !$this->config->get('payment_divido_status') || !$this->config->get('module_divido_calculator_status')) {
+        if (!isset($this->request->get['extension_id']) || !$this->config->get('payment_divido_status') || !$this->config->get('module_divido_calculator_status')) {
             return false;
         }
 
@@ -16,7 +16,7 @@ class ControllerExtensionModuleDividoCalculator extends Controller {
         $product_selection = $this->config->get('payment_divido_productselection');
         $product_threshold = $this->config->get('payment_divido_price_threshold');
 
-        $product_info = $this->model_catalog_product->getProduct($this->request->get['product_id']);
+        $product_info = $this->model_catalog_product->getProduct($this->request->get['extension_id']);
 
         $price = 0;
 
@@ -35,7 +35,7 @@ class ControllerExtensionModuleDividoCalculator extends Controller {
 
         $this->model_extension_payment_divido->setMerchant($api_key);
 
-        $plans = $this->model_extension_payment_divido->getProductPlans($this->request->get['product_id']);
+        $plans = $this->model_extension_payment_divido->getProductPlans($this->request->get['extension_id']);
 
         if (!$plans) {
             return false;

@@ -292,7 +292,7 @@ class ControllerExtensionPaymentDivido extends Controller {
 
         $price_threshold = $this->config->get('payment_divido_price_threshold');
 
-        $product_id = $args['product_id'];
+        $extension_id = $args['extension_id'];
         $product_price = $args['price'];
         $type = $args['type'];
 
@@ -300,7 +300,7 @@ class ControllerExtensionPaymentDivido extends Controller {
             return '';
         }
 
-        $plans = $this->model_extension_payment_divido->getProductPlans($product_id);
+        $plans = $this->model_extension_payment_divido->getProductPlans($extension_id);
 
         if (empty($plans)) {
             return '';

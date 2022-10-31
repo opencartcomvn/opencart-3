@@ -39,8 +39,8 @@ class ModelSaleSubscription extends Model {
             $implode[] = "s.`order_id` = '" . (int)$data['filter_order_id'] . "'";
         }
 
-        if (!empty($data['filter_order_product_id'])) {
-            $implode[] = "s.`order_product_id` = '" . (int)$data['filter_order_product_id'] . "'";
+        if (!empty($data['filter_order_extension_id'])) {
+            $implode[] = "s.`order_extension_id` = '" . (int)$data['filter_order_extension_id'] . "'";
         }
 
         if (!empty($data['filter_reference'])) {

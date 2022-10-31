@@ -129,7 +129,7 @@ class ModelLocalisationLanguage extends Model {
         $query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "product_description` WHERE `language_id` = '" . (int)$this->config->get('config_language_id') . "'");
 
         foreach ($query->rows as $product) {
-            $this->db->query("INSERT INTO `" . DB_PREFIX . "product_description` SET `product_id` = '" . (int)$product['product_id'] . "', `language_id` = '" . (int)$language_id . "', `name` = '" . $this->db->escape($product['name']) . "', `description` = '" . $this->db->escape($product['description']) . "', `tag` = '" . $this->db->escape($product['tag']) . "', `meta_title` = '" . $this->db->escape($product['meta_title']) . "', `meta_description` = '" . $this->db->escape($product['meta_description']) . "', `meta_keyword` = '" . $this->db->escape($product['meta_keyword']) . "'");
+            $this->db->query("INSERT INTO `" . DB_PREFIX . "product_description` SET `extension_id` = '" . (int)$product['extension_id'] . "', `language_id` = '" . (int)$language_id . "', `name` = '" . $this->db->escape($product['name']) . "', `description` = '" . $this->db->escape($product['description']) . "', `tag` = '" . $this->db->escape($product['tag']) . "', `meta_title` = '" . $this->db->escape($product['meta_title']) . "', `meta_description` = '" . $this->db->escape($product['meta_description']) . "', `meta_keyword` = '" . $this->db->escape($product['meta_keyword']) . "'");
         }
 
         $this->cache->delete('product');
@@ -138,7 +138,7 @@ class ModelLocalisationLanguage extends Model {
         $query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "product_attribute` WHERE `language_id` = '" . (int)$this->config->get('config_language_id') . "'");
 
         foreach ($query->rows as $product_attribute) {
-            $this->db->query("INSERT INTO `" . DB_PREFIX . "product_attribute` SET `product_id` = '" . (int)$product_attribute['product_id'] . "', `attribute_id` = '" . (int)$product_attribute['attribute_id'] . "', `language_id` = '" . (int)$language_id . "', `text` = '" . $this->db->escape($product_attribute['text']) . "'");
+            $this->db->query("INSERT INTO `" . DB_PREFIX . "product_attribute` SET `extension_id` = '" . (int)$product_attribute['extension_id'] . "', `attribute_id` = '" . (int)$product_attribute['attribute_id'] . "', `language_id` = '" . (int)$language_id . "', `text` = '" . $this->db->escape($product_attribute['text']) . "'");
         }
 
         // Return Action

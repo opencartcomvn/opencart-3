@@ -34,7 +34,7 @@ class ModelExtensionTotalCoupon extends Model {
             $coupon_product_query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "coupon_product` WHERE `coupon_id` = '" . (int)$coupon_query->row['coupon_id'] . "'");
 
             foreach ($coupon_product_query->rows as $product) {
-                $coupon_product_data[] = $product['product_id'];
+                $coupon_product_data[] = $product['extension_id'];
             }
 
             // Categories
@@ -50,16 +50,16 @@ class ModelExtensionTotalCoupon extends Model {
 
             if ($coupon_product_data || $coupon_category_data) {
                 foreach ($this->cart->getProducts() as $product) {
-                    if (in_array($product['product_id'], $coupon_product_data)) {
-                        $product_data[] = (int)$product['product_id'];
+                    if (in_array($product['extension_id'], $coupon_product_data)) {
+                        $product_data[] = (int)$product['extension_id'];
                         continue;
                     }
 
                     foreach ($coupon_category_data as $category_id) {
-                        $coupon_category_query = $this->db->query("SELECT COUNT(*) AS `total` FROM `" . DB_PREFIX . "product_to_category` WHERE `product_id` = '" . (int)$product['product_id'] . "' AND `category_id` = '" . (int)$category_id . "'");
+                        $coupon_category_query = $this->db->query("SELECT COUNT(*) AS `total` FROM `" . DB_PREFIX . "product_to_category` WHERE `extension_id` = '" . (int)$product['extension_id'] . "' AND `category_id` = '" . (int)$category_id . "'");
 
                         if ($coupon_category_query->row['total']) {
-                            $product_data[] = (int)$product['product_id'];
+                            $product_data[] = (int)$product['extension_id'];
                             continue;
                         }
                     }
@@ -110,7 +110,7 @@ class ModelExtensionTotalCoupon extends Model {
                     $sub_total = 0;
 
                     foreach ($this->cart->getProducts() as $product) {
-                        if (in_array($product['product_id'], $coupon_info['product'])) {
+                        if (in_array($product['extension_id'], $coupon_info['product'])) {
                             $sub_total += $product['total'];
                         }
                     }
@@ -126,7 +126,7 @@ class ModelExtensionTotalCoupon extends Model {
                     if (!$coupon_info['product']) {
                         $status = true;
                     } else {
-                        $status = in_array($product['product_id'], $coupon_info['product']);
+                        $status = in_array($product['extension_id'], $coupon_info['product']);
                     }
 
                     if ($status) {

@@ -132,9 +132,9 @@
                   <input type="text" name="product" value="" placeholder="{{ entry_product }}" id="input-product" class="form-control"/>
                   <div id="coupon-product" class="well well-sm" style="height: 150px; overflow: auto;">
                     {% for coupon_product in coupon_product %}
-                      <div id="coupon-product{{ coupon_product.product_id }}">
+                      <div id="coupon-product{{ coupon_product.extension_id }}">
                         <i class="fa fa-minus-circle"></i> {{ coupon_product.name }}
-                        <input type="hidden" name="coupon_product[]" value="{{ coupon_product.product_id }}"/>
+                        <input type="hidden" name="coupon_product[]" value="{{ coupon_product.extension_id }}"/>
                       </div>
                     {% endfor %}
                   </div>
@@ -222,7 +222,7 @@
                       response($.map(json, function (item) {
                           return {
                               label: item['name'],
-                              value: item['product_id']
+                              value: item['extension_id']
                           }
                       }));
                   }

@@ -62,7 +62,7 @@ class ControllerCheckoutCart extends Controller {
                 $product_total = 0;
 
                 foreach ($products as $product_2) {
-                    if ($product_2['product_id'] == $product['product_id']) {
+                    if ($product_2['extension_id'] == $product['extension_id']) {
                         $product_total += $product_2['quantity'];
                     }
                 }
@@ -146,7 +146,7 @@ class ControllerCheckoutCart extends Controller {
                     'reward'       => ($product['reward'] ? sprintf($this->language->get('text_points'), $product['reward']) : ''),
                     'price'        => $price,
                     'total'        => $total,
-                    'href'         => $this->url->link('product/product', 'product_id=' . $product['product_id'])
+                    'href'         => $this->url->link('product/product', 'extension_id=' . $product['extension_id'])
                 ];
             }
 
@@ -268,16 +268,16 @@ class ControllerCheckoutCart extends Controller {
 
         $json = [];
 
-        if (isset($this->request->post['product_id'])) {
-            $product_id = (int)$this->request->post['product_id'];
+        if (isset($this->request->post['extension_id'])) {
+            $extension_id = (int)$this->request->post['extension_id'];
         } else {
-            $product_id = 0;
+            $extension_id = 0;
         }
 
         // Products
         $this->load->model('catalog/product');
 
-        $product_info = $this->model_catalog_product->getProduct($product_id);
+        $product_info = $this->model_catalog_product->getProduct($extension_id);
 
         if ($product_info) {
             if (isset($this->request->post['quantity'])) {
@@ -292,7 +292,7 @@ class ControllerCheckoutCart extends Controller {
                 $option = [];
             }
 
-            $product_options = $this->model_catalog_product->getProductOptions($this->request->post['product_id']);
+            $product_options = $this->model_catalog_product->getProductOptions($this->request->post['extension_id']);
 
             foreach ($product_options as $product_option) {
                 if ($product_option['required'] && empty($option[$product_option['product_option_id']])) {
@@ -307,7 +307,7 @@ class ControllerCheckoutCart extends Controller {
             }
 
             // Validate subscription products
-            $subscriptions = $this->model_catalog_product->getSubscriptions($product_id);
+            $subscriptions = $this->model_catalog_product->getSubscriptions($extension_id);
 
             if ($subscriptions) {
                 $subscription_plan_ids = [];
@@ -322,9 +322,9 @@ class ControllerCheckoutCart extends Controller {
             }
 
             if (!$json) {
-                $this->cart->add($this->request->post['product_id'], $quantity, $option, $subscription_plan_id);
+                $this->cart->add($this->request->post['extension_id'], $quantity, $option, $subscription_plan_id);
 
-                $json['success'] = sprintf($this->language->get('text_success'), $this->url->link('product/product', 'product_id=' . $this->request->post['product_id']), $product_info['name'], $this->url->link('checkout/cart'));
+                $json['success'] = sprintf($this->language->get('text_success'), $this->url->link('product/product', 'extension_id=' . $this->request->post['extension_id']), $product_info['name'], $this->url->link('checkout/cart'));
 
                 // Unset all shipping and payment methods
                 unset($this->session->data['shipping_method']);
@@ -378,7 +378,7 @@ class ControllerCheckoutCart extends Controller {
 
                 $json['total'] = sprintf($this->language->get('text_items'), $this->cart->countProducts() + (isset($this->session->data['vouchers']) ? count($this->session->data['vouchers']) : 0), $this->currency->format($total, $this->session->data['currency']));
             } else {
-                $json['redirect'] = str_replace('&amp;', '&', $this->url->link('product/product', 'product_id=' . $this->request->post['product_id']));
+                $json['redirect'] = str_replace('&amp;', '&', $this->url->link('product/product', 'extension_id=' . $this->request->post['extension_id']));
             }
         }
 

@@ -127,10 +127,10 @@
                       {% for product in products %}
                         <tr>
                           <td class="text-center">
-                            {% if product.product_id in selected %}
-                              <input type="checkbox" name="selected[]" value="{{ product.product_id }}" checked="checked"/>
+                            {% if product.extension_id in selected %}
+                              <input type="checkbox" name="selected[]" value="{{ product.extension_id }}" checked="checked"/>
                             {% else %}
-                              <input type="checkbox" name="selected[]" value="{{ product.product_id }}"/>
+                              <input type="checkbox" name="selected[]" value="{{ product.extension_id }}"/>
                             {% endif %}
                           </td>
                           <td class="text-center">
@@ -234,7 +234,7 @@
                       response($.map(json, function (item) {
                           return {
                               label: item['name'],
-                              value: item['product_id']
+                              value: item['extension_id']
                           }
                       }));
                   }
@@ -254,7 +254,7 @@
                       response($.map(json, function (item) {
                           return {
                               label: item['model'],
-                              value: item['product_id']
+                              value: item['extension_id']
                           }
                       }));
                   }

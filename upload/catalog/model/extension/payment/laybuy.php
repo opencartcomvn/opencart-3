@@ -73,11 +73,11 @@ class ModelExtensionPaymentLaybuy extends Model {
             foreach ($cart_products as $cart_product) {
                 $product = [];
 
-                if ($xproducts && in_array($cart_product['product_id'], $xproducts)) {
+                if ($xproducts && in_array($cart_product['extension_id'], $xproducts)) {
                     $status = false;
                     break;
                 } else {
-                    $product = $this->db->query("SELECT GROUP_CONCAT(`category_id`) AS `categories` FROM `" . DB_PREFIX . "product_to_category` WHERE `product_id` = '" . (int)$cart_product['product_id'] . "'");
+                    $product = $this->db->query("SELECT GROUP_CONCAT(`category_id`) AS `categories` FROM `" . DB_PREFIX . "product_to_category` WHERE `extension_id` = '" . (int)$cart_product['extension_id'] . "'");
                     $product = $product->row;
                     $product = explode(',', $product['categories']);
 

@@ -291,7 +291,7 @@ CREATE TABLE `oc_banner_image` (
 --
 
 INSERT INTO `oc_banner_image` (`banner_image_id`, `banner_id`, `language_id`, `title`, `link`, `image`, `sort_order`) VALUES
-(79, 7, 1, 'iPhone 6', 'index.php?route=product/product&amp;path=57&amp;product_id=49', 'catalog/demo/banners/iPhone6.jpg', 0),
+(79, 7, 1, 'iPhone 6', 'index.php?route=product/product&amp;path=57&amp;extension_id=49', 'catalog/demo/banners/iPhone6.jpg', 0),
 (87, 6, 1, 'HP Banner', 'index.php?route=product/manufacturer/info&amp;manufacturer_id=7', 'catalog/demo/compaq_presario.jpg', 0),
 (94, 8, 1, 'NFL', '', 'catalog/demo/manufacturer/nfl.png', 0),
 (95, 8, 1, 'RedBull', '', 'catalog/demo/manufacturer/redbull.png', 0),
@@ -318,13 +318,13 @@ CREATE TABLE `oc_cart` (
   `api_id` int(11) NOT NULL,
   `customer_id` int(11) NOT NULL,
   `session_id` varchar(32) NOT NULL,
-  `product_id` int(11) NOT NULL,
+  `extension_id` int(11) NOT NULL,
   `subscription_plan_id` int(11) NOT NULL,
   `option` text NOT NULL,
   `quantity` int(5) NOT NULL,
   `date_added` datetime NOT NULL,
   PRIMARY KEY (`cart_id`),
-  KEY `cart_id` (`api_id`,`customer_id`,`session_id`,`product_id`,`subscription_plan_id`)
+  KEY `cart_id` (`api_id`,`customer_id`,`session_id`,`extension_id`,`subscription_plan_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 -----------------------------------------------------------
@@ -994,10 +994,10 @@ CREATE TABLE `oc_coupon_history` (
 
 DROP TABLE IF EXISTS `oc_coupon_product`;
 CREATE TABLE `oc_coupon_product` (
-  `coupon_product_id` int(11) NOT NULL AUTO_INCREMENT,
+  `coupon_extension_id` int(11) NOT NULL AUTO_INCREMENT,
   `coupon_id` int(11) NOT NULL,
-  `product_id` int(11) NOT NULL,
-  PRIMARY KEY (`coupon_product_id`)
+  `extension_id` int(11) NOT NULL,
+  PRIMARY KEY (`coupon_extension_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 -----------------------------------------------------------
@@ -1313,9 +1313,9 @@ CREATE TABLE `oc_customer_search` (
 DROP TABLE IF EXISTS `oc_customer_wishlist`;
 CREATE TABLE `oc_customer_wishlist` (
   `customer_id` int(11) NOT NULL,
-  `product_id` int(11) NOT NULL,
+  `extension_id` int(11) NOT NULL,
   `date_added` datetime NOT NULL,
-  PRIMARY KEY (`customer_id`,`product_id`)
+  PRIMARY KEY (`customer_id`,`extension_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 -----------------------------------------------------------
@@ -2371,7 +2371,7 @@ DROP TABLE IF EXISTS `oc_order_option`;
 CREATE TABLE `oc_order_option` (
   `order_option_id` int(11) NOT NULL AUTO_INCREMENT,
   `order_id` int(11) NOT NULL,
-  `order_product_id` int(11) NOT NULL,
+  `order_extension_id` int(11) NOT NULL,
   `product_option_id` int(11) NOT NULL,
   `product_option_value_id` int(11) NOT NULL DEFAULT '0',
   `name` varchar(255) NOT NULL,
@@ -2388,9 +2388,9 @@ CREATE TABLE `oc_order_option` (
 
 DROP TABLE IF EXISTS `oc_order_product`;
 CREATE TABLE `oc_order_product` (
-  `order_product_id` int(11) NOT NULL AUTO_INCREMENT,
+  `order_extension_id` int(11) NOT NULL AUTO_INCREMENT,
   `order_id` int(11) NOT NULL,
-  `product_id` int(11) NOT NULL,
+  `extension_id` int(11) NOT NULL,
   `name` varchar(255) NOT NULL,
   `model` varchar(64) NOT NULL,
   `quantity` int(4) NOT NULL,
@@ -2398,7 +2398,7 @@ CREATE TABLE `oc_order_product` (
   `total` decimal(15,4) NOT NULL DEFAULT '0.0000',
   `tax` decimal(15,4) NOT NULL DEFAULT '0.0000',
   `reward` int(8) NOT NULL,
-  PRIMARY KEY (`order_product_id`),
+  PRIMARY KEY (`order_extension_id`),
   KEY `order_id` (`order_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
@@ -2413,7 +2413,7 @@ CREATE TABLE `oc_order_recurring` (
   `order_recurring_id` int(11) NOT NULL AUTO_INCREMENT,
   `order_id` int(11) NOT NULL,
   `reference` varchar(255) NOT NULL,
-  `product_id` int(11) NOT NULL,
+  `extension_id` int(11) NOT NULL,
   `product_name` varchar(255) NOT NULL,
   `product_quantity` int(11) NOT NULL,
   `recurring_id` int(11) NOT NULL,
@@ -2575,7 +2575,7 @@ CREATE TABLE `oc_order_voucher` (
 
 DROP TABLE IF EXISTS `oc_product`;
 CREATE TABLE `oc_product` (
-  `product_id` int(11) NOT NULL AUTO_INCREMENT,
+  `extension_id` int(11) NOT NULL AUTO_INCREMENT,
   `model` varchar(64) NOT NULL,
   `sku` varchar(64) NOT NULL,
   `upc` varchar(12) NOT NULL,
@@ -2606,14 +2606,14 @@ CREATE TABLE `oc_product` (
   `viewed` int(5) NOT NULL DEFAULT '0',
   `date_added` datetime NOT NULL,
   `date_modified` datetime NOT NULL,
-  PRIMARY KEY (`product_id`)
+  PRIMARY KEY (`extension_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 --
 -- Dumping data for table `oc_product`
 --
 
-INSERT INTO `oc_product` (`product_id`, `model`, `sku`, `upc`, `ean`, `jan`, `isbn`, `mpn`, `location`, `quantity`, `stock_status_id`, `image`, `manufacturer_id`, `shipping`, `price`, `points`, `tax_class_id`, `date_available`, `weight`, `weight_class_id`, `length`, `width`, `height`, `length_class_id`, `subtract`, `minimum`, `sort_order`, `status`, `viewed`, `date_added`, `date_modified`) VALUES
+INSERT INTO `oc_product` (`extension_id`, `model`, `sku`, `upc`, `ean`, `jan`, `isbn`, `mpn`, `location`, `quantity`, `stock_status_id`, `image`, `manufacturer_id`, `shipping`, `price`, `points`, `tax_class_id`, `date_available`, `weight`, `weight_class_id`, `length`, `width`, `height`, `length_class_id`, `subtract`, `minimum`, `sort_order`, `status`, `viewed`, `date_added`, `date_modified`) VALUES
 (28, 'Product 1', '', '', '', '', '', '', '', 939, 7, 'catalog/demo/htc_touch_hd_1.jpg', 5, 1, '100.0000', 200, 9, '2009-02-03', '146.40000000', 2, '0.00000000', '0.00000000', '0.00000000', 1, 1, 1, 0, 1, 0, '2009-02-03 16:06:50', '2011-09-30 01:05:39'),
 (29, 'Product 2', '', '', '', '', '', '', '', 999, 6, 'catalog/demo/palm_treo_pro_1.jpg', 6, 1, '279.9900', 0, 9, '2009-02-03', '133.00000000', 2, '0.00000000', '0.00000000', '0.00000000', 3, 1, 1, 0, 1, 0, '2009-02-03 16:42:17', '2011-09-30 01:06:08'),
 (30, 'Product 3', '', '', '', '', '', '', '', 7, 6, 'catalog/demo/canon_eos_5d_1.jpg', 9, 1, '100.0000', 0, 9, '2009-02-03', '0.00000000', 1, '0.00000000', '0.00000000', '0.00000000', 1, 1, 1, 0, 1, 0, '2009-02-03 16:59:00', '2011-09-30 01:05:23'),
@@ -2643,7 +2643,7 @@ INSERT INTO `oc_product` (`product_id`, `model`, `sku`, `upc`, `ean`, `jan`, `is
 DROP TABLE IF EXISTS `oc_googleshopping_product`;
 CREATE TABLE `oc_googleshopping_product` (
   `product_advertise_google_id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `product_id` int(11) DEFAULT NULL,
+  `extension_id` int(11) DEFAULT NULL,
   `store_id` int(11) NOT NULL DEFAULT '0',
   `has_issues` tinyint(1) DEFAULT NULL,
   `destination_status` enum('pending','approved','disapproved') NOT NULL DEFAULT 'pending',
@@ -2665,7 +2665,7 @@ CREATE TABLE `oc_googleshopping_product` (
   `size` int(11) DEFAULT NULL,
   `is_modified` tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`product_advertise_google_id`),
-  UNIQUE KEY `product_id_store_id` (`product_id`,`store_id`)
+  UNIQUE KEY `extension_id_store_id` (`extension_id`,`store_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 -----------------------------------------------------------
@@ -2676,14 +2676,14 @@ CREATE TABLE `oc_googleshopping_product` (
 
 DROP TABLE IF EXISTS `oc_googleshopping_product_status`;
 CREATE TABLE `oc_googleshopping_product_status` (
-  `product_id` int(11) NOT NULL DEFAULT '0',
+  `extension_id` int(11) NOT NULL DEFAULT '0',
   `store_id` int(11) NOT NULL DEFAULT '0',
   `product_variation_id` varchar(64) NOT NULL DEFAULT '',
   `destination_statuses` text NOT NULL,
   `data_quality_issues` text NOT NULL,
   `item_level_issues` text NOT NULL,
   `google_expiration_date` int(11) NOT NULL DEFAULT '0',
-  PRIMARY KEY (`product_id`,`store_id`,`product_variation_id`)
+  PRIMARY KEY (`extension_id`,`store_id`,`product_variation_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 -----------------------------------------------------------
@@ -2694,10 +2694,10 @@ CREATE TABLE `oc_googleshopping_product_status` (
 
 DROP TABLE IF EXISTS `oc_googleshopping_product_target`;
 CREATE TABLE `oc_googleshopping_product_target` (
-  `product_id` int(11) NOT NULL,
+  `extension_id` int(11) NOT NULL,
   `store_id` int(11) NOT NULL DEFAULT '0',
   `advertise_google_target_id` int(11) UNSIGNED NOT NULL,
-  PRIMARY KEY (`product_id`,`advertise_google_target_id`)
+  PRIMARY KEY (`extension_id`,`advertise_google_target_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 -----------------------------------------------------------
@@ -2708,18 +2708,18 @@ CREATE TABLE `oc_googleshopping_product_target` (
 
 DROP TABLE IF EXISTS `oc_product_attribute`;
 CREATE TABLE `oc_product_attribute` (
-  `product_id` int(11) NOT NULL,
+  `extension_id` int(11) NOT NULL,
   `attribute_id` int(11) NOT NULL,
   `language_id` int(11) NOT NULL,
   `text` text NOT NULL,
-  PRIMARY KEY (`product_id`,`attribute_id`,`language_id`)
+  PRIMARY KEY (`extension_id`,`attribute_id`,`language_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 --
 -- Dumping data for table `oc_product_attribute`
 --
 
-INSERT INTO `oc_product_attribute` (`product_id`, `attribute_id`, `language_id`, `text`) VALUES
+INSERT INTO `oc_product_attribute` (`extension_id`, `attribute_id`, `language_id`, `text`) VALUES
 (43, 2, 1, '1'),
 (47, 4, 1, '16GB'),
 (43, 4, 1, '8gb'),
@@ -2734,7 +2734,7 @@ INSERT INTO `oc_product_attribute` (`product_id`, `attribute_id`, `language_id`,
 
 DROP TABLE IF EXISTS `oc_product_description`;
 CREATE TABLE `oc_product_description` (
-  `product_id` int(11) NOT NULL,
+  `extension_id` int(11) NOT NULL,
   `language_id` int(11) NOT NULL,
   `name` varchar(255) NOT NULL,
   `description` text NOT NULL,
@@ -2742,7 +2742,7 @@ CREATE TABLE `oc_product_description` (
   `meta_title` varchar(255) NOT NULL,
   `meta_description` varchar(255) NOT NULL,
   `meta_keyword` varchar(255) NOT NULL,
-  PRIMARY KEY (`product_id`,`language_id`),
+  PRIMARY KEY (`extension_id`,`language_id`),
   KEY `name` (`name`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
@@ -2750,7 +2750,7 @@ CREATE TABLE `oc_product_description` (
 -- Dumping data for table `oc_product_description`
 --
 
-INSERT INTO `oc_product_description` (`product_id`, `language_id`, `name`, `description`, `tag`, `meta_title`, `meta_description`, `meta_keyword`) VALUES
+INSERT INTO `oc_product_description` (`extension_id`, `language_id`, `name`, `description`, `tag`, `meta_title`, `meta_description`, `meta_keyword`) VALUES
 (35, 1, 'Product 8', '&lt;p&gt;\r\n	Product 8&lt;/p&gt;\r\n', '', 'Product 8', '', ''),
 (48, 1, 'iPod Classic', '&lt;div class=&quot;cpt_product_description &quot;&gt;\r\n	&lt;div&gt;\r\n		&lt;p&gt;\r\n			&lt;strong&gt;More room to move.&lt;/strong&gt;&lt;/p&gt;\r\n		&lt;p&gt;\r\n			With 80GB or 160GB of storage and up to 40 hours of battery life, the new iPod classic lets you enjoy up to 40,000 songs or up to 200 hours of video or any combination wherever you go.&lt;/p&gt;\r\n		&lt;p&gt;\r\n			&lt;strong&gt;Cover Flow.&lt;/strong&gt;&lt;/p&gt;\r\n		&lt;p&gt;\r\n			Browse through your music collection by flipping through album art. Select an album to turn it over and see the track list.&lt;/p&gt;\r\n		&lt;p&gt;\r\n			&lt;strong&gt;Enhanced interface.&lt;/strong&gt;&lt;/p&gt;\r\n		&lt;p&gt;\r\n			Experience a whole new way to browse and view your music and video.&lt;/p&gt;\r\n		&lt;p&gt;\r\n			&lt;strong&gt;Sleeker design.&lt;/strong&gt;&lt;/p&gt;\r\n		&lt;p&gt;\r\n			Beautiful, durable, and sleeker than ever, iPod classic now features an anodized aluminum and polished stainless steel enclosure with rounded edges.&lt;/p&gt;\r\n	&lt;/div&gt;\r\n&lt;/div&gt;\r\n&lt;!-- cpt_container_end --&gt;', '', 'iPod Classic', '', ''),
 (40, 1, 'iPhone', '&lt;p class=&quot;intro&quot;&gt;\r\n	iPhone is a revolutionary new mobile phone that allows you to make a call by simply tapping a name or number in your address book, a favorites list, or a call log. It also automatically syncs all your contacts from a PC, Mac, or Internet service. And it lets you select and listen to voicemail messages in whatever order you want just like email.&lt;/p&gt;\r\n', '', 'iPhone', '', ''),
@@ -2780,7 +2780,7 @@ INSERT INTO `oc_product_description` (`product_id`, `language_id`, `name`, `desc
 DROP TABLE IF EXISTS `oc_product_discount`;
 CREATE TABLE `oc_product_discount` (
   `product_discount_id` int(11) NOT NULL AUTO_INCREMENT,
-  `product_id` int(11) NOT NULL,
+  `extension_id` int(11) NOT NULL,
   `customer_group_id` int(11) NOT NULL,
   `quantity` int(4) NOT NULL DEFAULT '0',
   `priority` int(5) NOT NULL DEFAULT '1',
@@ -2788,14 +2788,14 @@ CREATE TABLE `oc_product_discount` (
   `date_start` date NOT NULL DEFAULT '0000-00-00',
   `date_end` date NOT NULL DEFAULT '0000-00-00',
   PRIMARY KEY (`product_discount_id`),
-  KEY `product_id` (`product_id`)
+  KEY `extension_id` (`extension_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 --
 -- Dumping data for table `oc_product_discount`
 --
 
-INSERT INTO `oc_product_discount` (`product_discount_id`, `product_id`, `customer_group_id`, `quantity`, `priority`, `price`, `date_start`, `date_end`) VALUES
+INSERT INTO `oc_product_discount` (`product_discount_id`, `extension_id`, `customer_group_id`, `quantity`, `priority`, `price`, `date_start`, `date_end`) VALUES
 (440, 42, 1, 30, 1, '66.0000', '0000-00-00', '0000-00-00'),
 (439, 42, 1, 20, 1, '77.0000', '0000-00-00', '0000-00-00'),
 (438, 42, 1, 10, 1, '88.0000', '0000-00-00', '0000-00-00');
@@ -2808,9 +2808,9 @@ INSERT INTO `oc_product_discount` (`product_discount_id`, `product_id`, `custome
 
 DROP TABLE IF EXISTS `oc_product_filter`;
 CREATE TABLE `oc_product_filter` (
-  `product_id` int(11) NOT NULL,
+  `extension_id` int(11) NOT NULL,
   `filter_id` int(11) NOT NULL,
-  PRIMARY KEY (`product_id`,`filter_id`)
+  PRIMARY KEY (`extension_id`,`filter_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 -----------------------------------------------------------
@@ -2822,18 +2822,18 @@ CREATE TABLE `oc_product_filter` (
 DROP TABLE IF EXISTS `oc_product_image`;
 CREATE TABLE `oc_product_image` (
   `product_image_id` int(11) NOT NULL AUTO_INCREMENT,
-  `product_id` int(11) NOT NULL,
+  `extension_id` int(11) NOT NULL,
   `image` varchar(255) DEFAULT NULL,
   `sort_order` int(3) NOT NULL DEFAULT '0',
   PRIMARY KEY (`product_image_id`),
-  KEY `product_id` (`product_id`)
+  KEY `extension_id` (`extension_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 --
 -- Dumping data for table `oc_product_image`
 --
 
-INSERT INTO `oc_product_image` (`product_image_id`, `product_id`, `image`, `sort_order`) VALUES
+INSERT INTO `oc_product_image` (`product_image_id`, `extension_id`, `image`, `sort_order`) VALUES
 (2345, 30, 'catalog/demo/canon_eos_5d_2.jpg', 0),
 (2321, 47, 'catalog/demo/hp_3.jpg', 0),
 (2035, 28, 'catalog/demo/htc_touch_hd_2.jpg', 0),
@@ -2905,7 +2905,7 @@ INSERT INTO `oc_product_image` (`product_image_id`, `product_id`, `image`, `sort
 DROP TABLE IF EXISTS `oc_product_option`;
 CREATE TABLE `oc_product_option` (
   `product_option_id` int(11) NOT NULL AUTO_INCREMENT,
-  `product_id` int(11) NOT NULL,
+  `extension_id` int(11) NOT NULL,
   `option_id` int(11) NOT NULL,
   `value` text NOT NULL,
   `required` tinyint(1) NOT NULL,
@@ -2916,7 +2916,7 @@ CREATE TABLE `oc_product_option` (
 -- Dumping data for table `oc_product_option`
 --
 
-INSERT INTO `oc_product_option` (`product_option_id`, `product_id`, `option_id`, `value`, `required`) VALUES
+INSERT INTO `oc_product_option` (`product_option_id`, `extension_id`, `option_id`, `value`, `required`) VALUES
 (224, 35, 11, '', 1),
 (225, 47, 12, '2011-04-22', 1),
 (223, 42, 2, '', 1),
@@ -2940,7 +2940,7 @@ DROP TABLE IF EXISTS `oc_product_option_value`;
 CREATE TABLE `oc_product_option_value` (
   `product_option_value_id` int(11) NOT NULL AUTO_INCREMENT,
   `product_option_id` int(11) NOT NULL,
-  `product_id` int(11) NOT NULL,
+  `extension_id` int(11) NOT NULL,
   `option_id` int(11) NOT NULL,
   `option_value_id` int(11) NOT NULL,
   `quantity` int(3) NOT NULL,
@@ -2958,7 +2958,7 @@ CREATE TABLE `oc_product_option_value` (
 -- Dumping data for table `oc_product_option_value`
 --
 
-INSERT INTO `oc_product_option_value` (`product_option_value_id`, `product_option_id`, `product_id`, `option_id`, `option_value_id`, `quantity`, `subtract`, `price`, `price_prefix`, `points`, `points_prefix`, `weight`, `weight_prefix`) VALUES
+INSERT INTO `oc_product_option_value` (`product_option_value_id`, `product_option_id`, `extension_id`, `option_id`, `option_value_id`, `quantity`, `subtract`, `price`, `price_prefix`, `points`, `points_prefix`, `weight`, `weight_prefix`) VALUES
 (1, 217, 42, 5, 41, 100, 0, '1.0000', '+', 0, '+', '1.00000000', '+'),
 (6, 218, 42, 1, 31, 146, 1, '20.0000', '+', 2, '-', '20.00000000', '+'),
 (7, 218, 42, 1, 43, 300, 1, '30.0000', '+', 3, '+', '30.00000000', '+'),
@@ -2984,10 +2984,10 @@ INSERT INTO `oc_product_option_value` (`product_option_value_id`, `product_optio
 
 DROP TABLE IF EXISTS `oc_product_subscription`;
 CREATE TABLE `oc_product_subscription` (
-  `product_id` int(11) NOT NULL,
+  `extension_id` int(11) NOT NULL,
   `subscription_plan_id` int(11) NOT NULL,
   `customer_group_id` int(11) NOT NULL,
-  PRIMARY KEY (`product_id`,`subscription_plan_id`,`customer_group_id`)
+  PRIMARY KEY (`extension_id`,`subscription_plan_id`,`customer_group_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 -----------------------------------------------------------
@@ -2998,16 +2998,16 @@ CREATE TABLE `oc_product_subscription` (
 
 DROP TABLE IF EXISTS `oc_product_related`;
 CREATE TABLE `oc_product_related` (
-  `product_id` int(11) NOT NULL,
+  `extension_id` int(11) NOT NULL,
   `related_id` int(11) NOT NULL,
-  PRIMARY KEY (`product_id`,`related_id`)
+  PRIMARY KEY (`extension_id`,`related_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 --
 -- Dumping data for table `oc_product_related`
 --
 
-INSERT INTO `oc_product_related` (`product_id`, `related_id`) VALUES
+INSERT INTO `oc_product_related` (`extension_id`, `related_id`) VALUES
 (40, 42),
 (41, 42),
 (42, 40),
@@ -3022,7 +3022,7 @@ INSERT INTO `oc_product_related` (`product_id`, `related_id`) VALUES
 DROP TABLE IF EXISTS `oc_product_reward`;
 CREATE TABLE `oc_product_reward` (
   `product_reward_id` int(11) NOT NULL AUTO_INCREMENT,
-  `product_id` int(11) NOT NULL DEFAULT '0',
+  `extension_id` int(11) NOT NULL DEFAULT '0',
   `customer_group_id` int(11) NOT NULL DEFAULT '0',
   `points` int(8) NOT NULL DEFAULT '0',
   PRIMARY KEY (`product_reward_id`)
@@ -3032,7 +3032,7 @@ CREATE TABLE `oc_product_reward` (
 -- Dumping data for table `oc_product_reward`
 --
 
-INSERT INTO `oc_product_reward` (`product_reward_id`, `product_id`, `customer_group_id`, `points`) VALUES
+INSERT INTO `oc_product_reward` (`product_reward_id`, `extension_id`, `customer_group_id`, `points`) VALUES
 (515, 42, 1, 100),
 (519, 47, 1, 300),
 (379, 28, 1, 400),
@@ -3062,21 +3062,21 @@ INSERT INTO `oc_product_reward` (`product_reward_id`, `product_id`, `customer_gr
 DROP TABLE IF EXISTS `oc_product_special`;
 CREATE TABLE `oc_product_special` (
   `product_special_id` int(11) NOT NULL AUTO_INCREMENT,
-  `product_id` int(11) NOT NULL,
+  `extension_id` int(11) NOT NULL,
   `customer_group_id` int(11) NOT NULL,
   `priority` int(5) NOT NULL DEFAULT '1',
   `price` decimal(15,4) NOT NULL DEFAULT '0.0000',
   `date_start` date NOT NULL DEFAULT '0000-00-00',
   `date_end` date NOT NULL DEFAULT '0000-00-00',
   PRIMARY KEY (`product_special_id`),
-  KEY `product_id` (`product_id`)
+  KEY `extension_id` (`extension_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 --
 -- Dumping data for table `oc_product_special`
 --
 
-INSERT INTO `oc_product_special` (`product_special_id`, `product_id`, `customer_group_id`, `priority`, `price`, `date_start`, `date_end`) VALUES
+INSERT INTO `oc_product_special` (`product_special_id`, `extension_id`, `customer_group_id`, `priority`, `price`, `date_start`, `date_end`) VALUES
 (419, 42, 1, 1, '90.0000', '0000-00-00', '0000-00-00'),
 (439, 30, 1, 2, '90.0000', '0000-00-00', '0000-00-00'),
 (438, 30, 1, 1, '80.0000', '0000-00-00', '0000-00-00');
@@ -3089,9 +3089,9 @@ INSERT INTO `oc_product_special` (`product_special_id`, `product_id`, `customer_
 
 DROP TABLE IF EXISTS `oc_product_to_category`;
 CREATE TABLE `oc_product_to_category` (
-  `product_id` int(11) NOT NULL,
+  `extension_id` int(11) NOT NULL,
   `category_id` int(11) NOT NULL,
-  PRIMARY KEY (`product_id`,`category_id`),
+  PRIMARY KEY (`extension_id`,`category_id`),
   KEY `category_id` (`category_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
@@ -3099,7 +3099,7 @@ CREATE TABLE `oc_product_to_category` (
 -- Dumping data for table `oc_product_to_category`
 --
 
-INSERT INTO `oc_product_to_category` (`product_id`, `category_id`) VALUES
+INSERT INTO `oc_product_to_category` (`extension_id`, `category_id`) VALUES
 (28, 20),
 (28, 24),
 (29, 20),
@@ -3139,9 +3139,9 @@ INSERT INTO `oc_product_to_category` (`product_id`, `category_id`) VALUES
 
 DROP TABLE IF EXISTS `oc_product_to_download`;
 CREATE TABLE `oc_product_to_download` (
-  `product_id` int(11) NOT NULL,
+  `extension_id` int(11) NOT NULL,
   `download_id` int(11) NOT NULL,
-  PRIMARY KEY (`product_id`,`download_id`)
+  PRIMARY KEY (`extension_id`,`download_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 -----------------------------------------------------------
@@ -3152,10 +3152,10 @@ CREATE TABLE `oc_product_to_download` (
 
 DROP TABLE IF EXISTS `oc_product_to_layout`;
 CREATE TABLE `oc_product_to_layout` (
-  `product_id` int(11) NOT NULL,
+  `extension_id` int(11) NOT NULL,
   `store_id` int(11) NOT NULL,
   `layout_id` int(11) NOT NULL,
-  PRIMARY KEY (`product_id`,`store_id`)
+  PRIMARY KEY (`extension_id`,`store_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 -----------------------------------------------------------
@@ -3166,16 +3166,16 @@ CREATE TABLE `oc_product_to_layout` (
 
 DROP TABLE IF EXISTS `oc_product_to_store`;
 CREATE TABLE `oc_product_to_store` (
-  `product_id` int(11) NOT NULL,
+  `extension_id` int(11) NOT NULL,
   `store_id` int(11) NOT NULL DEFAULT '0',
-  PRIMARY KEY (`product_id`,`store_id`)
+  PRIMARY KEY (`extension_id`,`store_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 --
 -- Dumping data for table `oc_product_to_store`
 --
 
-INSERT INTO `oc_product_to_store` (`product_id`, `store_id`) VALUES
+INSERT INTO `oc_product_to_store` (`extension_id`, `store_id`) VALUES
 (28, 0),
 (29, 0),
 (30, 0),
@@ -3206,7 +3206,7 @@ DROP TABLE IF EXISTS `oc_return`;
 CREATE TABLE `oc_return` (
   `return_id` int(11) NOT NULL AUTO_INCREMENT,
   `order_id` int(11) NOT NULL,
-  `product_id` int(11) NOT NULL,
+  `extension_id` int(11) NOT NULL,
   `customer_id` int(11) NOT NULL,
   `firstname` varchar(32) NOT NULL,
   `lastname` varchar(32) NOT NULL,
@@ -3323,7 +3323,7 @@ INSERT INTO `oc_return_status` (`return_status_id`, `language_id`, `name`) VALUE
 DROP TABLE IF EXISTS `oc_review`;
 CREATE TABLE `oc_review` (
   `review_id` int(11) NOT NULL AUTO_INCREMENT,
-  `product_id` int(11) NOT NULL,
+  `extension_id` int(11) NOT NULL,
   `customer_id` int(11) NOT NULL,
   `author` varchar(64) NOT NULL,
   `text` text NOT NULL,
@@ -3332,7 +3332,7 @@ CREATE TABLE `oc_review` (
   `date_added` datetime NOT NULL,
   `date_modified` datetime NOT NULL,
   PRIMARY KEY (`review_id`),
-  KEY `product_id` (`product_id`)
+  KEY `extension_id` (`extension_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 -----------------------------------------------------------
@@ -3653,7 +3653,7 @@ CREATE TABLE `oc_subscription` (
   `subscription_id` int(11) NOT NULL AUTO_INCREMENT,
   `customer_id` int(11) NOT NULL,
   `order_id` int(11) NOT NULL,
-  `order_product_id` int(11) NOT NULL,
+  `order_extension_id` int(11) NOT NULL,
   `subscription_plan_id` int(11) NOT NULL,
   `customer_payment_id` int(11) NOT NULL,  
   `name` varchar(32) NOT NULL,
@@ -3968,13 +3968,13 @@ CREATE TABLE `oc_seo_url` (
 --
 
 INSERT INTO `oc_seo_url` (`seo_url_id`, `store_id`, `language_id`, `query`, `keyword`) VALUES
-(824, 0, 1, 'product_id=48', 'ipod-classic'),
+(824, 0, 1, 'extension_id=48', 'ipod-classic'),
 (836, 0, 1, 'category_id=20', 'desktops'),
 (834, 0, 1, 'category_id=26', 'pc'),
 (835, 0, 1, 'category_id=27', 'mac'),
 (730, 0, 1, 'manufacturer_id=8', 'apple'),
 (772, 0, 1, 'information_id=4', 'about_us'),
-(768, 0, 1, 'product_id=42', 'test'),
+(768, 0, 1, 'extension_id=42', 'test'),
 (789, 0, 1, 'category_id=34', 'mp3-players'),
 (781, 0, 1, 'category_id=36', 'test2'),
 (774, 0, 1, 'category_id=18', 'laptop-notebook'),
@@ -4010,23 +4010,23 @@ INSERT INTO `oc_seo_url` (`seo_url_id`, `store_id`, `language_id`, `query`, `key
 (806, 0, 1, 'category_id=40', 'test7'),
 (807, 0, 1, 'category_id=41', 'test8'),
 (808, 0, 1, 'category_id=42', 'test9'),
-(809, 0, 1, 'product_id=30', 'canon-eos-5d'),
-(840, 0, 1, 'product_id=47', 'hp-lp3065'),
-(811, 0, 1, 'product_id=28', 'htc-touch-hd'),
-(812, 0, 1, 'product_id=43', 'macbook'),
-(813, 0, 1, 'product_id=44', 'macbook-air'),
-(814, 0, 1, 'product_id=45', 'macbook-pro'),
-(816, 0, 1, 'product_id=31', 'nikon-d300'),
-(817, 0, 1, 'product_id=29', 'palm-treo-pro'),
-(818, 0, 1, 'product_id=35', 'product-8'),
-(819, 0, 1, 'product_id=49', 'samsung-galaxy-tab-10-1'),
-(820, 0, 1, 'product_id=33', 'samsung-syncmaster-941bw'),
-(821, 0, 1, 'product_id=46', 'sony-vaio'),
-(837, 0, 1, 'product_id=41', 'imac'),
-(823, 0, 1, 'product_id=40', 'iphone'),
-(825, 0, 1, 'product_id=36', 'ipod-nano'),
-(826, 0, 1, 'product_id=34', 'ipod-shuffle'),
-(827, 0, 1, 'product_id=32', 'ipod-touch'),
+(809, 0, 1, 'extension_id=30', 'canon-eos-5d'),
+(840, 0, 1, 'extension_id=47', 'hp-lp3065'),
+(811, 0, 1, 'extension_id=28', 'htc-touch-hd'),
+(812, 0, 1, 'extension_id=43', 'macbook'),
+(813, 0, 1, 'extension_id=44', 'macbook-air'),
+(814, 0, 1, 'extension_id=45', 'macbook-pro'),
+(816, 0, 1, 'extension_id=31', 'nikon-d300'),
+(817, 0, 1, 'extension_id=29', 'palm-treo-pro'),
+(818, 0, 1, 'extension_id=35', 'product-8'),
+(819, 0, 1, 'extension_id=49', 'samsung-galaxy-tab-10-1'),
+(820, 0, 1, 'extension_id=33', 'samsung-syncmaster-941bw'),
+(821, 0, 1, 'extension_id=46', 'sony-vaio'),
+(837, 0, 1, 'extension_id=41', 'imac'),
+(823, 0, 1, 'extension_id=40', 'iphone'),
+(825, 0, 1, 'extension_id=36', 'ipod-nano'),
+(826, 0, 1, 'extension_id=34', 'ipod-shuffle'),
+(827, 0, 1, 'extension_id=32', 'ipod-touch'),
 (828, 0, 1, 'manufacturer_id=9', 'canon'),
 (829, 0, 1, 'manufacturer_id=5', 'htc'),
 (830, 0, 1, 'manufacturer_id=7', 'hewlett-packard'),

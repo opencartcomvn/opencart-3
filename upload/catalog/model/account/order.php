@@ -114,8 +114,8 @@ class ModelAccountOrder extends Model {
         return $query->rows;
     }
 
-    public function getOrderProduct(int $order_id, int $order_product_id): array {
-        $query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "order_product` WHERE `order_id` = '" . (int)$order_id . "' AND `order_product_id` = '" . (int)$order_product_id . "'");
+    public function getOrderProduct(int $order_id, int $order_extension_id): array {
+        $query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "order_product` WHERE `order_id` = '" . (int)$order_id . "' AND `order_extension_id` = '" . (int)$order_extension_id . "'");
 
         return $query->row;
     }
@@ -126,8 +126,8 @@ class ModelAccountOrder extends Model {
         return $query->rows;
     }
 
-    public function getOrderOptions(int $order_id, int $order_product_id): array {
-        $query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "order_option` WHERE `order_id` = '" . (int)$order_id . "' AND `order_product_id` = '" . (int)$order_product_id . "'");
+    public function getOrderOptions(int $order_id, int $order_extension_id): array {
+        $query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "order_option` WHERE `order_id` = '" . (int)$order_id . "' AND `order_extension_id` = '" . (int)$order_extension_id . "'");
 
         return $query->rows;
     }

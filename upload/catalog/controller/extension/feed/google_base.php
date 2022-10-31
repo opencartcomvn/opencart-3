@@ -34,16 +34,16 @@ class ControllerExtensionFeedGoogleBase extends Controller {
                 $products = $this->model_catalog_product->getProducts($filter_data);
 
                 foreach ($products as $product) {
-                    if (!in_array($product['product_id'], $product_data) && $product['description']) {
-                        $product_data[] = $product['product_id'];
+                    if (!in_array($product['extension_id'], $product_data) && $product['description']) {
+                        $product_data[] = $product['extension_id'];
 
                         $output .= '<item>';
                         $output .= '<title><![CDATA[' . $product['name'] . ']]></title>';
-                        $output .= '<link>' . $this->url->link('product/product', 'product_id=' . $product['product_id']) . '</link>';
+                        $output .= '<link>' . $this->url->link('product/product', 'extension_id=' . $product['extension_id']) . '</link>';
                         $output .= '<description><![CDATA[' . strip_tags(html_entity_decode($product['description'], ENT_QUOTES, 'UTF-8')) . ']]></description>';
                         $output .= '<g:brand><![CDATA[' . html_entity_decode($product['manufacturer'], ENT_QUOTES, 'UTF-8') . ']]></g:brand>';
                         $output .= '<g:condition>new</g:condition>';
-                        $output .= '<g:id>' . $product['product_id'] . '</g:id>';
+                        $output .= '<g:id>' . $product['extension_id'] . '</g:id>';
 
                         if ($product['image']) {
                             $output .= '  <g:image_link>' . $this->model_tool_image->resize($product['image'], 500, 500) . '</g:image_link>';
@@ -89,7 +89,7 @@ class ControllerExtensionFeedGoogleBase extends Controller {
 
                         $output .= '  <g:google_product_category>' . $google_base_category['google_base_category_id'] . '</g:google_product_category>';
 
-                        $categories = $this->model_catalog_product->getCategories($product['product_id']);
+                        $categories = $this->model_catalog_product->getCategories($product['extension_id']);
 
                         foreach ($categories as $category) {
                             $path = $this->getPath($category['category_id']);

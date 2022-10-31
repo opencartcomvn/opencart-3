@@ -6,8 +6,8 @@ class ModelMarketingCoupon extends Model {
         $coupon_id = $this->db->getLastId();
 
         if (isset($data['coupon_product'])) {
-            foreach ($data['coupon_product'] as $product_id) {
-                $this->db->query("INSERT INTO `" . DB_PREFIX . "coupon_product` SET `coupon_id` = '" . (int)$coupon_id . "', `product_id` = '" . (int)$product_id . "'");
+            foreach ($data['coupon_product'] as $extension_id) {
+                $this->db->query("INSERT INTO `" . DB_PREFIX . "coupon_product` SET `coupon_id` = '" . (int)$coupon_id . "', `extension_id` = '" . (int)$extension_id . "'");
             }
         }
 
@@ -26,8 +26,8 @@ class ModelMarketingCoupon extends Model {
         $this->db->query("DELETE FROM `" . DB_PREFIX . "coupon_product` WHERE `coupon_id` = '" . (int)$coupon_id . "'");
 
         if (isset($data['coupon_product'])) {
-            foreach ($data['coupon_product'] as $product_id) {
-                $this->db->query("INSERT INTO `" . DB_PREFIX . "coupon_product` SET `coupon_id` = '" . (int)$coupon_id . "', `product_id` = '" . (int)$product_id . "'");
+            foreach ($data['coupon_product'] as $extension_id) {
+                $this->db->query("INSERT INTO `" . DB_PREFIX . "coupon_product` SET `coupon_id` = '" . (int)$coupon_id . "', `extension_id` = '" . (int)$extension_id . "'");
             }
         }
 
@@ -106,7 +106,7 @@ class ModelMarketingCoupon extends Model {
         $query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "coupon_product` WHERE `coupon_id` = '" . (int)$coupon_id . "'");
 
         foreach ($query->rows as $result) {
-            $coupon_product_data[] = $result['product_id'];
+            $coupon_product_data[] = $result['extension_id'];
         }
 
         return $coupon_product_data;

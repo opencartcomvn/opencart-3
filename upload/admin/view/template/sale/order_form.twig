@@ -254,7 +254,7 @@
                         <tr>
                           <td class="text-left">{{ order_product.name }}
                             <br/>
-                            <input type="hidden" name="product[{{ product_row }}][product_id]" value="{{ order_product.product_id }}"/>
+                            <input type="hidden" name="product[{{ product_row }}][extension_id]" value="{{ order_product.extension_id }}"/>
                             {% for option in order_product.option %}
                               - <small>{{ option.name }}: {{ option.value }}</small>
                               <br/>
@@ -325,7 +325,7 @@
                       <label class="col-sm-2 control-label" for="input-product">{{ entry_product }}</label>
                       <div class="col-sm-10">
                         <input type="text" name="product" value="" id="input-product" class="form-control"/>
-                        <input type="hidden" name="product_id" value=""/>
+                        <input type="hidden" name="extension_id" value=""/>
                       </div>
                     </div>
                     <div class="form-group">
@@ -1209,7 +1209,7 @@
                       response($.map(json, function (item) {
                           return {
                               label: item['name'],
-                              value: item['product_id'],
+                              value: item['extension_id'],
                               model: item['model'],
                               option: item['option'],
                               subscription: item['subscription'],
@@ -1221,7 +1221,7 @@
           },
           'select': function (item) {
               $('#tab-product input[name=\'product\']').val(item['label']);
-              $('#tab-product input[name=\'product_id\']').val(item['value']);
+              $('#tab-product input[name=\'extension_id\']').val(item['value']);
 
               // Option
               if (item['option'] != '') {
@@ -1430,7 +1430,7 @@
           $.ajax({
               url: '{{ catalog }}index.php?route=api/cart/add&api_token={{ api_token }}&store_id=' + $('select[name=\'store_id\'] option:selected').val(),
               type: 'post',
-              data: $('#tab-product input[name=\'product_id\'], #tab-product input[name=\'quantity\'], #tab-product input[name^=\'option\'][type=\'text\'], #tab-product input[name^=\'option\'][type=\'hidden\'], #tab-product input[name^=\'option\'][type=\'radio\']:checked, #tab-product input[name^=\'option\'][type=\'checkbox\']:checked, #tab-product select[name^=\'option\'], #tab-product textarea[name^=\'option\']'),
+              data: $('#tab-product input[name=\'extension_id\'], #tab-product input[name=\'quantity\'], #tab-product input[name^=\'option\'][type=\'text\'], #tab-product input[name^=\'option\'][type=\'hidden\'], #tab-product input[name^=\'option\'][type=\'radio\']:checked, #tab-product input[name^=\'option\'][type=\'checkbox\']:checked, #tab-product select[name^=\'option\'], #tab-product textarea[name^=\'option\']'),
               dataType: 'json',
               crossDomain: true,
               beforeSend: function () {
@@ -2390,7 +2390,7 @@
 
                           html += '<tr>';
                           html += '  <td class="text-left">' + product['name'] + ' ' + (!product['stock'] ? '<span class="text-danger">***</span>' : '') + '<br/>';
-                          html += '  <input type="hidden" name="product[' + i + '][product_id]" value="' + product['product_id'] + '"/>';
+                          html += '  <input type="hidden" name="product[' + i + '][extension_id]" value="' + product['extension_id'] + '"/>';
 
                           if (product['option']) {
                               for (j = 0; j < product['option'].length; j++) {

@@ -321,17 +321,17 @@ class WechatPay
 
     /**
      * 获取支付规二维码
-     * @param string $product_id 商户定义的商品id 或者订单号
+     * @param string $extension_id 商户定义的商品id 或者订单号
      * @return string
      */
-    public function getQrcPayUrl($product_id)
+    public function getQrcPayUrl($extension_id)
     {
         $data = array(
             'appid'      => $this->appid,
             'mch_id'     => $this->mch_id,
             'time_stamp' => (string)time(),
             'nonce_str'  => Tools::createNoncestr(),
-            'product_id' => (string)$product_id,
+            'extension_id' => (string)$extension_id,
         );
         $data['sign'] = Tools::getPaySign($data, $this->partnerKey);
         return "weixin://wxpay/bizpayurl?" . http_build_query($data);

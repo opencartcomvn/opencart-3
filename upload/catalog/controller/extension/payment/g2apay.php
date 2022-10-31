@@ -73,13 +73,13 @@ class ControllerExtensionPaymentG2APay extends Controller {
 
         foreach ($ordered_products as $product) {
             $item = new \stdClass();
-            $item->sku = $product['product_id'];
+            $item->sku = $product['extension_id'];
             $item->name = $product['name'];
             $item->amount = $product['price'] * $product['quantity'];
             $item->qty = $product['quantity'];
-            $item->id = $product['product_id'];
+            $item->id = $product['extension_id'];
             $item->price = $product['price'];
-            $item->url = $this->url->link('product/product', 'product_id=' . $product['product_id'], true);
+            $item->url = $this->url->link('product/product', 'extension_id=' . $product['extension_id'], true);
             $items[] = $item;
         }
 

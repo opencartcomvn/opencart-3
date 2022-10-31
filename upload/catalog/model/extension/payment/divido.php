@@ -15,8 +15,8 @@ class ModelExtensionPaymentDivido extends Model {
         return $method_data;
     }
 
-    public function getProductSettings($product_id) {
-        return $this->db->query("SELECT `display`, `plans` FROM `" . DB_PREFIX . "divido_product` WHERE `product_id` = '" . (int)$product_id . "'")->row;
+    public function getProductSettings($extension_id) {
+        return $this->db->query("SELECT `display`, `plans` FROM `" . DB_PREFIX . "divido_product` WHERE `extension_id` = '" . (int)$extension_id . "'")->row;
     }
 
     public function isEnabled() {
@@ -155,7 +155,7 @@ class ModelExtensionPaymentDivido extends Model {
         $products = $cart->getProducts();
 
         foreach ($products as $product) {
-            $product_plans = $this->getProductPlans($product['product_id']);
+            $product_plans = $this->getProductPlans($product['extension_id']);
 
             if ($product_plans) {
                 $plans = array_merge($plans, $product_plans);
@@ -223,18 +223,18 @@ class ModelExtensionPaymentDivido extends Model {
         ];
     }
 
-    public function getProductPlans($product_id) {
+    public function getProductPlans($extension_id) {
         // Products
         $this->load->model('catalog/product');
 
-        $product_info = $this->model_catalog_product->getProduct($product_id);
-        $settings = $this->getProductSettings($product_id);
+        $product_info = $this->model_catalog_product->getProduct($extension_id);
+        $settings = $this->getProductSettings($extension_id);
         $product_selection = $this->config->get('payment_divido_productselection');
         $divido_categories = $this->config->get('payment_divido_categories');
         $price_threshold = $this->config->get('payment_divido_price_threshold');
 
         if ($divido_categories) {
-            $product_categories = $this->model_catalog_product->getCategories($product_id);
+            $product_categories = $this->model_catalog_product->getCategories($extension_id);
 
             $all_categories = [];
             foreach ($product_categories as $product_category) {

@@ -81,7 +81,7 @@ class ControllerApiOrder extends Controller {
                 $product_total = 0;
 
                 foreach ($products as $product_2) {
-                    if ($product_2['product_id'] == $product['product_id']) {
+                    if ($product_2['extension_id'] == $product['extension_id']) {
                         $product_total += $product_2['quantity'];
                     }
                 }
@@ -202,7 +202,7 @@ class ControllerApiOrder extends Controller {
                     }
 
                     $order_data['products'][] = [
-                        'product_id'   => $product['product_id'],
+                        'extension_id'   => $product['extension_id'],
                         'name'         => $product['name'],
                         'model'        => $product['model'],
                         'option'       => $option_data,
@@ -452,7 +452,7 @@ class ControllerApiOrder extends Controller {
                     $product_total = 0;
 
                     foreach ($products as $product_2) {
-                        if ($product_2['product_id'] == $product['product_id']) {
+                        if ($product_2['extension_id'] == $product['extension_id']) {
                             $product_total += $product_2['quantity'];
                         }
                     }
@@ -574,7 +574,7 @@ class ControllerApiOrder extends Controller {
                         }
 
                         $order_data['products'][] = [
-                            'product_id'   => $product['product_id'],
+                            'extension_id'   => $product['extension_id'],
                             'name'         => $product['name'],
                             'model'        => $product['model'],
                             'option'       => $option_data,

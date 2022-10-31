@@ -70,12 +70,12 @@ class WechatHardware extends Common
         return false;
     }
 
-    public function getQrcode($product_id)
+    public function getQrcode($extension_id)
     {
         if (!$this->access_token && !$this->getAccessToken()) {
             return false;
         }
-        $result = Tools::httpGet(self::API_BASE_URL_PREFIX . self::DEVICE_GETQRCODE . "access_token={$this->access_token}&product_id=$product_id");
+        $result = Tools::httpGet(self::API_BASE_URL_PREFIX . self::DEVICE_GETQRCODE . "access_token={$this->access_token}&extension_id=$extension_id");
         if ($result) {
             $json = json_decode($result, true);
             if (empty($json) || !empty($json['errcode'])) {

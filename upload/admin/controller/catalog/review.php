@@ -477,12 +477,12 @@ class ControllerCatalogReview extends Controller {
         // Products
         $this->load->model('catalog/product');
 
-        if (isset($this->request->post['product_id'])) {
-            $data['product_id'] = (int)$this->request->post['product_id'];
+        if (isset($this->request->post['extension_id'])) {
+            $data['extension_id'] = (int)$this->request->post['extension_id'];
         } elseif (!empty($review_info)) {
-            $data['product_id'] = $review_info['product_id'];
+            $data['extension_id'] = $review_info['extension_id'];
         } else {
-            $data['product_id'] = '';
+            $data['extension_id'] = '';
         }
 
         if (isset($this->request->post['product'])) {
@@ -545,7 +545,7 @@ class ControllerCatalogReview extends Controller {
             $this->error['warning'] = $this->language->get('error_permission');
         }
 
-        if (!$this->request->post['product_id']) {
+        if (!$this->request->post['extension_id']) {
             $this->error['product'] = $this->language->get('error_product');
         }
 

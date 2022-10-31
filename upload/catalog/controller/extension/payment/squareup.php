@@ -202,7 +202,7 @@ class ControllerExtensionPaymentSquareup extends Controller {
                 if ($this->cart->hasProducts() && $transaction_status == 'captured') {
                     foreach ($this->cart->getProducts() as $item) {
                         foreach ($order_products as $order_product) {
-                            if ($item['subscription'] && $order_product['product_id'] == $item['product_id']) {
+                            if ($item['subscription'] && $order_product['extension_id'] == $item['extension_id']) {
                                 if ($item['subscription']['trial_status']) {
                                     $trial_price = $this->tax->calculate($item['subscription']['trial_price'] * $item['quantity'], $item['tax_class_id']);
                                     $trial_amt = $this->currency->format($trial_price, $this->session->data['currency']);
@@ -232,7 +232,7 @@ class ControllerExtensionPaymentSquareup extends Controller {
 
                                 $subscription_data = [
                                     'order_id'         => $this->session->data['order_id'],
-                                    'order_product_id' => $order_product['order_product_id'],
+                                    'order_extension_id' => $order_product['order_extension_id'],
                                     'trial_price'      => $item['subscription']['trial_price'],
                                     'trial_cycle'      => $item['subscription']['trial_cycle'],
                                     'trial_frequency'  => $item['subscription']['trial_frequency'],

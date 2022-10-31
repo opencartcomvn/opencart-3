@@ -293,7 +293,7 @@ class ModelUpgrade1009 extends Model {
             $this->db->query("TRUNCATE TABLE `" . DB_PREFIX . "cart`");
 
             $this->db->query("ALTER TABLE `" . DB_PREFIX . "cart` DROP COLUMN `recurring_id`");
-            $this->db->query("ALTER TABLE `" . DB_PREFIX . "cart` ADD COLUMN `subscription_plan_id` int(11) NOT NULL AFTER `product_id`");
+            $this->db->query("ALTER TABLE `" . DB_PREFIX . "cart` ADD COLUMN `subscription_plan_id` int(11) NOT NULL AFTER `extension_id`");
         }
 
         // OPENCART_SERVER
