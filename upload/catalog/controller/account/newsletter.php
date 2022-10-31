@@ -1,7 +1,7 @@
 <?php
 class ControllerAccountNewsletter extends Controller {
     public function index(): void {
-        if (!$this->customer->isLogged() || (!isset($this->request->get['customer_token']) || !isset($this->session->data['customer_token']) || ($this->request->get['customer_token'] != $this->session->data['customer_token']))) {
+        if (!$this->customer->isLogged() || (!isset($this->request->get['member_token']) || !isset($this->session->data['member_token']) || ($this->request->get['member_token'] != $this->session->data['member_token']))) {
             $this->session->data['redirect'] = $this->url->link('account/newsletter', '', true);
 
             $this->response->redirect($this->url->link('account/login', '', true));
@@ -19,7 +19,7 @@ class ControllerAccountNewsletter extends Controller {
 
             $this->session->data['success'] = $this->language->get('text_success');
 
-            $this->response->redirect($this->url->link('account/account', 'customer_token=' . $this->session->data['customer_token'], true));
+            $this->response->redirect($this->url->link('account/account', 'member_token=' . $this->session->data['member_token'], true));
         }
 
         $data['breadcrumbs'] = [];
@@ -31,16 +31,16 @@ class ControllerAccountNewsletter extends Controller {
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('text_account'),
-            'href' => $this->url->link('account/account', 'customer_token=' . $this->session->data['customer_token'], true)
+            'href' => $this->url->link('account/account', 'member_token=' . $this->session->data['member_token'], true)
         ];
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('text_newsletter'),
-            'href' => $this->url->link('account/newsletter', 'customer_token=' . $this->session->data['customer_token'], true)
+            'href' => $this->url->link('account/newsletter', 'member_token=' . $this->session->data['member_token'], true)
         ];
 
-        $data['action'] = $this->url->link('account/newsletter', 'customer_token=' . $this->session->data['customer_token'], true);
-        $data['back'] = $this->url->link('account/account', 'customer_token=' . $this->session->data['customer_token'], true);
+        $data['action'] = $this->url->link('account/newsletter', 'member_token=' . $this->session->data['member_token'], true);
+        $data['back'] = $this->url->link('account/account', 'member_token=' . $this->session->data['member_token'], true);
         $data['newsletter'] = $this->customer->getNewsletter();
 
         $data['column_left'] = $this->load->controller('common/column_left');

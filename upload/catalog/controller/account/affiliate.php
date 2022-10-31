@@ -3,14 +3,14 @@ class ControllerAccountAffiliate extends Controller {
     private array $error = [];
 
     public function add(): void {
-        if (!$this->customer->isLogged() || (!isset($this->request->get['customer_token']) || !isset($this->session->data['customer_token']) || ($this->request->get['customer_token'] != $this->session->data['customer_token']))) {
-            $this->session->data['redirect'] = $this->url->link('account/affiliate', 'customer_token=' . $this->session->data['customer_token'], true);
+        if (!$this->customer->isLogged() || (!isset($this->request->get['member_token']) || !isset($this->session->data['member_token']) || ($this->request->get['member_token'] != $this->session->data['member_token']))) {
+            $this->session->data['redirect'] = $this->url->link('account/affiliate', 'member_token=' . $this->session->data['member_token'], true);
 
-            $this->response->redirect($this->url->link('affiliate/login', 'customer_token=' . $this->session->data['customer_token'], true));
+            $this->response->redirect($this->url->link('affiliate/login', 'member_token=' . $this->session->data['member_token'], true));
         }
 
         if (!$this->config->get('config_affiliate_status')) {
-            $this->response->redirect($this->url->link('account/account', 'customer_token=' . $this->session->data['customer_token'], true));
+            $this->response->redirect($this->url->link('account/account', 'member_token=' . $this->session->data['member_token'], true));
         }
 
         $this->load->language('account/affiliate');
@@ -25,7 +25,7 @@ class ControllerAccountAffiliate extends Controller {
 
             $this->session->data['success'] = $this->language->get('text_success');
 
-            $this->response->redirect($this->url->link('account/account', 'customer_token=' . $this->session->data['customer_token'], true));
+            $this->response->redirect($this->url->link('account/account', 'member_token=' . $this->session->data['member_token'], true));
         }
 
         $this->getForm();
@@ -33,9 +33,9 @@ class ControllerAccountAffiliate extends Controller {
 
     public function edit(): void {
         if (!$this->customer->isLogged()) {
-            $this->session->data['redirect'] = $this->url->link('account/affiliate', 'customer_token=' . $this->session->data['customer_token'], true);
+            $this->session->data['redirect'] = $this->url->link('account/affiliate', 'member_token=' . $this->session->data['member_token'], true);
 
-            $this->response->redirect($this->url->link('affiliate/login', 'customer_token=' . $this->session->data['customer_token'], true));
+            $this->response->redirect($this->url->link('affiliate/login', 'member_token=' . $this->session->data['member_token'], true));
         }
 
         $this->load->language('account/affiliate');
@@ -50,7 +50,7 @@ class ControllerAccountAffiliate extends Controller {
 
             $this->session->data['success'] = $this->language->get('text_success');
 
-            $this->response->redirect($this->url->link('account/account', 'customer_token=' . $this->session->data['customer_token'], true));
+            $this->response->redirect($this->url->link('account/account', 'member_token=' . $this->session->data['member_token'], true));
         }
 
         $this->getForm();
@@ -66,18 +66,18 @@ class ControllerAccountAffiliate extends Controller {
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('text_account'),
-            'href' => $this->url->link('account/account', 'customer_token=' . $this->session->data['customer_token'], true)
+            'href' => $this->url->link('account/account', 'member_token=' . $this->session->data['member_token'], true)
         ];
 
         if ($this->request->get['route'] == 'account/affiliate/add') {
             $data['breadcrumbs'][] = [
                 'text' => $this->language->get('text_affiliate'),
-                'href' => $this->url->link('account/affiliate/add', 'customer_token=' . $this->session->data['customer_token'], true)
+                'href' => $this->url->link('account/affiliate/add', 'member_token=' . $this->session->data['member_token'], true)
             ];
         } else {
             $data['breadcrumbs'][] = [
                 'text' => $this->language->get('text_affiliate'),
-                'href' => $this->url->link('account/affiliate/edit', 'customer_token=' . $this->session->data['customer_token'], true)
+                'href' => $this->url->link('account/affiliate/edit', 'member_token=' . $this->session->data['member_token'], true)
             ];
         }
 
@@ -251,8 +251,8 @@ class ControllerAccountAffiliate extends Controller {
             $data['agree'] = false;
         }
 
-        $data['action'] = $this->url->link($this->request->get['route'], 'customer_token=' . $this->session->data['customer_token'], true);
-        $data['back'] = $this->url->link('account/account', 'customer_token=' . $this->session->data['customer_token'], true);
+        $data['action'] = $this->url->link($this->request->get['route'], 'member_token=' . $this->session->data['member_token'], true);
+        $data['back'] = $this->url->link('account/account', 'member_token=' . $this->session->data['member_token'], true);
 
         $data['column_left'] = $this->load->controller('common/column_left');
         $data['column_right'] = $this->load->controller('common/column_right');

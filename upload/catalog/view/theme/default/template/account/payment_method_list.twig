@@ -72,7 +72,7 @@
             $('.alert-dismissible').remove();
 
             $.ajax({
-                url: 'index.php?route=account/payment_method/delete&customer_token={{ customer_token }}&customer_payment_id=' + key,
+                url: 'index.php?route=account/payment_method/delete&member_token={{ member_token }}&customer_payment_id=' + key,
                 type: 'post',
                 dataType: 'json',
                 success: function (json) {

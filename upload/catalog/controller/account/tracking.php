@@ -1,14 +1,14 @@
 <?php
 class ControllerAccountTracking extends Controller {
     public function index(): object|null {
-        if (!$this->customer->isLogged() || (!isset($this->request->get['customer_token']) || !isset($this->session->data['customer_token']) || ($this->request->get['customer_token'] != $this->session->data['customer_token']))) {
+        if (!$this->customer->isLogged() || (!isset($this->request->get['member_token']) || !isset($this->session->data['member_token']) || ($this->request->get['member_token'] != $this->session->data['member_token']))) {
             $this->session->data['redirect'] = $this->url->link('account/tracking', '', true);
 
             $this->response->redirect($this->url->link('account/login', '', true));
         }
 
         if (!$this->config->get('config_affiliate_status')) {
-            $this->response->redirect($this->url->link('account/account', 'customer_token=' . $this->session->data['customer_token'], true));
+            $this->response->redirect($this->url->link('account/account', 'member_token=' . $this->session->data['member_token'], true));
         }
 
         // Customers
@@ -39,8 +39,8 @@ class ControllerAccountTracking extends Controller {
             ];
 
             $data['code'] = $affiliate_info['tracking'];
-            $data['continue'] = $this->url->link('account/account', 'customer_token=' . $this->session->data['customer_token'], true);
-            $data['customer_token'] = $this->session->data['customer_token'];
+            $data['continue'] = $this->url->link('account/account', 'member_token=' . $this->session->data['member_token'], true);
+            $data['member_token'] = $this->session->data['member_token'];
             $data['text_description'] = sprintf($this->language->get('text_description'), $this->config->get('config_name'));
 
             $data['column_left'] = $this->load->controller('common/column_left');
@@ -73,7 +73,7 @@ class ControllerAccountTracking extends Controller {
             $tracking = '';
         }
 
-        if (!$this->customer->isLogged() || (!isset($this->request->get['customer_token']) || !isset($this->session->data['customer_token']) || ($this->request->get['customer_token'] != $this->session->data['customer_token']))) {
+        if (!$this->customer->isLogged() || (!isset($this->request->get['member_token']) || !isset($this->session->data['member_token']) || ($this->request->get['member_token'] != $this->session->data['member_token']))) {
             $this->session->data['redirect'] = $this->url->link('account/password', '', true);
 
             $json['redirect'] = $this->url->link('account/login', '', true);

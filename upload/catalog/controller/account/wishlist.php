@@ -1,7 +1,7 @@
 <?php
 class ControllerAccountWishList extends Controller {
     public function index(): void {
-        if (!$this->customer->isLogged() || (!isset($this->request->get['customer_token']) || !isset($this->session->data['customer_token']) || ($this->request->get['customer_token'] != $this->session->data['customer_token']))) {
+        if (!$this->customer->isLogged() || (!isset($this->request->get['member_token']) || !isset($this->session->data['member_token']) || ($this->request->get['member_token'] != $this->session->data['member_token']))) {
             $this->session->data['redirect'] = $this->url->link('account/wishlist', '', true);
 
             $this->response->redirect($this->url->link('account/login', '', true));
@@ -38,12 +38,12 @@ class ControllerAccountWishList extends Controller {
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('text_account'),
-            'href' => $this->url->link('account/account', (isset($this->session->data['customer_token']) ? '&customer_token=' . $this->session->data['customer_token'] : ''), true)
+            'href' => $this->url->link('account/account', (isset($this->session->data['member_token']) ? '&member_token=' . $this->session->data['member_token'] : ''), true)
         ];
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('heading_title'),
-            'href' => $this->url->link('account/wishlist', (isset($this->session->data['customer_token']) ? '&customer_token=' . $this->session->data['customer_token'] : ''), true)
+            'href' => $this->url->link('account/wishlist', (isset($this->session->data['member_token']) ? '&member_token=' . $this->session->data['member_token'] : ''), true)
         ];
 
         if (isset($this->session->data['success'])) {
@@ -97,14 +97,14 @@ class ControllerAccountWishList extends Controller {
                     'price'      => $price,
                     'special'    => $special,
                     'href'       => $this->url->link('product/product', 'extension_id=' . $product_info['extension_id']),
-                    'remove'     => $this->url->link('account/wishlist', (isset($this->session->data['customer_token']) ? '&customer_token=' . $this->session->data['customer_token'] : '') . '&remove=' . $product_info['extension_id'])
+                    'remove'     => $this->url->link('account/wishlist', (isset($this->session->data['member_token']) ? '&member_token=' . $this->session->data['member_token'] : '') . '&remove=' . $product_info['extension_id'])
                 ];
             } else {
                 $this->model_account_wishlist->deleteWishlist($result['extension_id']);
             }
         }
 
-        $data['continue'] = $this->url->link('account/account', 'customer_token=' . $this->session->data['customer_token'], true);
+        $data['continue'] = $this->url->link('account/account', 'member_token=' . $this->session->data['member_token'], true);
 
         $data['column_left'] = $this->load->controller('common/column_left');
         $data['column_right'] = $this->load->controller('common/column_right');
@@ -150,7 +150,7 @@ class ControllerAccountWishList extends Controller {
                 $this->session->data['wishlist'] = array_unique($this->session->data['wishlist']);
 
                 $json['total'] = sprintf($this->language->get('text_wishlist'), isset($this->session->data['wishlist']) ? count($this->session->data['wishlist']) : 0);
-                $json['success'] = sprintf($this->language->get('text_login'), $this->url->link('account/login', '', true), $this->url->link('account/register', '', true), $this->url->link('product/product', 'extension_id=' . (int)$this->request->post['extension_id']), $product_info['name'], $this->url->link('account/wishlist', (isset($this->session->data['customer_token']) ? '&customer_token=' . $this->session->data['customer_token'] : '')));
+                $json['success'] = sprintf($this->language->get('text_login'), $this->url->link('account/login', '', true), $this->url->link('account/register', '', true), $this->url->link('product/product', 'extension_id=' . (int)$this->request->post['extension_id']), $product_info['name'], $this->url->link('account/wishlist', (isset($this->session->data['member_token']) ? '&member_token=' . $this->session->data['member_token'] : '')));
             }
         }
 

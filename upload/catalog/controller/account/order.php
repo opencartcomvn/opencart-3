@@ -1,7 +1,7 @@
 <?php
 class ControllerAccountOrder extends Controller {
     public function index(): void {
-        if (!$this->customer->isLogged() || (!isset($this->request->get['customer_token']) || !isset($this->session->data['customer_token']) || ($this->request->get['customer_token'] != $this->session->data['customer_token']))) {
+        if (!$this->customer->isLogged() || (!isset($this->request->get['member_token']) || !isset($this->session->data['member_token']) || ($this->request->get['member_token'] != $this->session->data['member_token']))) {
             $this->session->data['redirect'] = $this->url->link('account/order', '', true);
 
             $this->response->redirect($this->url->link('account/login', '', true));
@@ -26,12 +26,12 @@ class ControllerAccountOrder extends Controller {
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('text_account'),
-            'href' => $this->url->link('account/account', 'customer_token=' . $this->session->data['customer_token'], true)
+            'href' => $this->url->link('account/account', 'member_token=' . $this->session->data['member_token'], true)
         ];
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('heading_title'),
-            'href' => $this->url->link('account/order', 'customer_token=' . $this->session->data['customer_token'] . $url, true)
+            'href' => $this->url->link('account/order', 'member_token=' . $this->session->data['member_token'] . $url, true)
         ];
 
         if (isset($this->request->get['page'])) {
@@ -61,7 +61,7 @@ class ControllerAccountOrder extends Controller {
                 'date_added' => date($this->language->get('date_format_short'), strtotime($result['date_added'])),
                 'products'   => ($product_total + $voucher_total),
                 'total'      => $this->currency->format($result['total'], $result['currency_code'], $result['currency_value']),
-                'view'       => $this->url->link('account/order/info', 'customer_token=' . $this->session->data['customer_token'] . '&order_id=' . $result['order_id'], true),
+                'view'       => $this->url->link('account/order/info', 'member_token=' . $this->session->data['member_token'] . '&order_id=' . $result['order_id'], true),
             ];
         }
 
@@ -69,11 +69,11 @@ class ControllerAccountOrder extends Controller {
         $pagination->total = $order_total;
         $pagination->page = $page;
         $pagination->limit = 10;
-        $pagination->url = $this->url->link('account/order', 'customer_token=' . $this->session->data['customer_token'] . '&page={page}', true);
+        $pagination->url = $this->url->link('account/order', 'member_token=' . $this->session->data['member_token'] . '&page={page}', true);
 
         $data['pagination'] = $pagination->render();
         $data['results'] = sprintf($this->language->get('text_pagination'), ($order_total) ? (($page - 1) * 10) + 1 : 0, ((($page - 1) * 10) > ($order_total - 10)) ? $order_total : ((($page - 1) * 10) + 10), $order_total, ceil($order_total / 10));
-        $data['continue'] = $this->url->link('account/account', 'customer_token=' . $this->session->data['customer_token'], true);
+        $data['continue'] = $this->url->link('account/account', 'member_token=' . $this->session->data['member_token'], true);
 
         $data['column_left'] = $this->load->controller('common/column_left');
         $data['column_right'] = $this->load->controller('common/column_right');
@@ -94,7 +94,7 @@ class ControllerAccountOrder extends Controller {
             $order_id = 0;
         }
 
-        if (!$this->customer->isLogged() || (!isset($this->request->get['customer_token']) || !isset($this->session->data['customer_token']) || ($this->request->get['customer_token'] != $this->session->data['customer_token']))) {
+        if (!$this->customer->isLogged() || (!isset($this->request->get['member_token']) || !isset($this->session->data['member_token']) || ($this->request->get['member_token'] != $this->session->data['member_token']))) {
             $this->session->data['redirect'] = $this->url->link('account/order/info', 'order_id=' . $order_id, true);
 
             $this->response->redirect($this->url->link('account/login', '', true));
@@ -123,17 +123,17 @@ class ControllerAccountOrder extends Controller {
 
             $data['breadcrumbs'][] = [
                 'text' => $this->language->get('text_account'),
-                'href' => $this->url->link('account/account', 'customer_token=' . $this->session->data['customer_token'], true)
+                'href' => $this->url->link('account/account', 'member_token=' . $this->session->data['member_token'], true)
             ];
 
             $data['breadcrumbs'][] = [
                 'text' => $this->language->get('heading_title'),
-                'href' => $this->url->link('account/order', 'customer_token=' . $this->session->data['customer_token'] . $url, true)
+                'href' => $this->url->link('account/order', 'member_token=' . $this->session->data['member_token'] . $url, true)
             ];
 
             $data['breadcrumbs'][] = [
                 'text' => $this->language->get('text_order'),
-                'href' => $this->url->link('account/order/info', 'customer_token=' . $this->session->data['customer_token'] . '&order_id=' . $this->request->get['order_id'] . $url, true)
+                'href' => $this->url->link('account/order/info', 'member_token=' . $this->session->data['member_token'] . '&order_id=' . $this->request->get['order_id'] . $url, true)
             ];
 
             if (isset($this->session->data['error'])) {
@@ -289,7 +289,7 @@ class ControllerAccountOrder extends Controller {
                 $product_info = $this->model_catalog_product->getProduct($product['extension_id']);
 
                 if ($product_info) {
-                    $reorder = $this->url->link('account/order/reorder', 'customer_token=' . $this->session->data['customer_token'] . '&order_id=' . $order_id . '&order_extension_id=' . $product['order_extension_id'], true);
+                    $reorder = $this->url->link('account/order/reorder', 'member_token=' . $this->session->data['member_token'] . '&order_id=' . $order_id . '&order_extension_id=' . $product['order_extension_id'], true);
                 } else {
                     $reorder = '';
                 }
@@ -345,7 +345,7 @@ class ControllerAccountOrder extends Controller {
                 ];
             }
 
-            $data['continue'] = $this->url->link('account/order', 'customer_token=' . $this->session->data['customer_token'], true);
+            $data['continue'] = $this->url->link('account/order', 'member_token=' . $this->session->data['member_token'], true);
 
             $data['column_left'] = $this->load->controller('common/column_left');
             $data['column_right'] = $this->load->controller('common/column_right');
@@ -363,7 +363,7 @@ class ControllerAccountOrder extends Controller {
     }
 
     public function reorder(): void {
-        if (!$this->customer->isLogged() || (!isset($this->request->get['customer_token']) || !isset($this->session->data['customer_token']) || ($this->request->get['customer_token'] != $this->session->data['customer_token']))) {
+        if (!$this->customer->isLogged() || (!isset($this->request->get['member_token']) || !isset($this->session->data['member_token']) || ($this->request->get['member_token'] != $this->session->data['member_token']))) {
             $this->session->data['redirect'] = $this->url->link('account/order', '', true);
 
             $this->response->redirect($this->url->link('account/login', '', true));
@@ -428,6 +428,6 @@ class ControllerAccountOrder extends Controller {
             }
         }
 
-        $this->response->redirect($this->url->link('account/order/info', 'customer_token=' . $this->session->data['customer_token'] . '&order_id=' . $order_id));
+        $this->response->redirect($this->url->link('account/order/info', 'member_token=' . $this->session->data['member_token'] . '&order_id=' . $order_id));
     }
 }

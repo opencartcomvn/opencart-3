@@ -4,7 +4,7 @@ class ControllerAccountRegister extends Controller {
 
     public function index(): void {
         if ($this->customer->isLogged()) {
-            $this->response->redirect($this->url->link('account/account', 'customer_token=' . $this->session->data['customer_token'], true));
+            $this->response->redirect($this->url->link('account/account', 'member_token=' . $this->session->data['member_token'], true));
         }
 
         $this->load->language('account/register');
@@ -24,7 +24,7 @@ class ControllerAccountRegister extends Controller {
             $customer_id = $this->model_account_customer->addCustomer($this->request->post);
 
             // Create customer token
-            $this->session->data['customer_token'] = token(26);
+            $this->session->data['member_token'] = token(26);
 
             // Clear any previous login attempts for unregistered accounts.
             $this->model_account_customer->deleteLoginAttempts($this->request->post['email']);
@@ -33,7 +33,7 @@ class ControllerAccountRegister extends Controller {
 
             unset($this->session->data['guest']);
 
-            $this->response->redirect($this->url->link('account/success', 'customer_token=' . $this->session->data['customer_token']));
+            $this->response->redirect($this->url->link('account/success', 'member_token=' . $this->session->data['member_token']));
         }
 
         $data['breadcrumbs'] = [];

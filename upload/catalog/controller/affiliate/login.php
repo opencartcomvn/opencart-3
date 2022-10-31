@@ -3,7 +3,7 @@ class ControllerAffiliateLogin extends Controller {
     private array $error = [];
 
     public function index(): void {
-        if (!$this->customer->isLogged() || (!isset($this->request->get['customer_token']) || !isset($this->session->data['customer_token']) || ($this->request->get['customer_token'] != $this->session->data['customer_token']))) {
+        if (!$this->customer->isLogged() || (!isset($this->request->get['member_token']) || !isset($this->session->data['member_token']) || ($this->request->get['member_token'] != $this->session->data['member_token']))) {
             $this->response->redirect($this->url->link('account/account', '', true));
         }
 
@@ -32,12 +32,12 @@ class ControllerAffiliateLogin extends Controller {
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('text_account'),
-            'href' => $this->url->link('account/account', 'customer_token=' . $this->session->data['customer_token'], true)
+            'href' => $this->url->link('account/account', 'member_token=' . $this->session->data['member_token'], true)
         ];
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('text_login'),
-            'href' => $this->url->link('affiliate/login', 'customer_token=' . $this->session->data['customer_token'], true)
+            'href' => $this->url->link('affiliate/login', 'member_token=' . $this->session->data['member_token'], true)
         ];
 
         $data['text_description'] = sprintf($this->language->get('text_description'), $this->config->get('config_name'), $this->config->get('config_name'), $this->config->get('config_affiliate_commission') . '%');
@@ -78,9 +78,9 @@ class ControllerAffiliateLogin extends Controller {
             $data['password'] = '';
         }
 
-        $data['action'] = $this->url->link('affiliate/login', 'customer_token=' . $this->session->data['customer_token'], true);
-        $data['register'] = $this->url->link('affiliate/register', 'customer_token=' . $this->session->data['customer_token'], true);
-        $data['forgotten'] = $this->url->link('account/forgotten', 'customer_token=' . $this->session->data['customer_token'], true);
+        $data['action'] = $this->url->link('affiliate/login', 'member_token=' . $this->session->data['member_token'], true);
+        $data['register'] = $this->url->link('affiliate/register', 'member_token=' . $this->session->data['member_token'], true);
+        $data['forgotten'] = $this->url->link('account/forgotten', 'member_token=' . $this->session->data['member_token'], true);
 
         $data['column_left'] = $this->load->controller('common/column_left');
         $data['column_right'] = $this->load->controller('common/column_right');

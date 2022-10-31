@@ -3,7 +3,7 @@ class ControllerAccountEdit extends Controller {
     private array $error = [];
 
     public function index(): void {
-        if (!$this->customer->isLogged() || (!isset($this->request->get['customer_token']) || !isset($this->session->data['customer_token']) || ($this->request->get['customer_token'] != $this->session->data['customer_token']))) {
+        if (!$this->customer->isLogged() || (!isset($this->request->get['member_token']) || !isset($this->session->data['member_token']) || ($this->request->get['member_token'] != $this->session->data['member_token']))) {
             $this->session->data['redirect'] = $this->url->link('account/edit', '', true);
 
             $this->response->redirect($this->url->link('account/login', '', true));
@@ -27,7 +27,7 @@ class ControllerAccountEdit extends Controller {
 
             $this->session->data['success'] = $this->language->get('text_success');
 
-            $this->response->redirect($this->url->link('account/account', 'customer_token=' . $this->session->data['customer_token'], true));
+            $this->response->redirect($this->url->link('account/account', 'member_token=' . $this->session->data['member_token'], true));
         }
 
         $data['breadcrumbs'] = [];
@@ -39,12 +39,12 @@ class ControllerAccountEdit extends Controller {
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('text_account'),
-            'href' => $this->url->link('account/account', 'customer_token=' . $this->session->data['customer_token'], true)
+            'href' => $this->url->link('account/account', 'member_token=' . $this->session->data['member_token'], true)
         ];
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('text_edit'),
-            'href' => $this->url->link('account/edit', 'customer_token=' . $this->session->data['customer_token'], true)
+            'href' => $this->url->link('account/edit', 'member_token=' . $this->session->data['member_token'], true)
         ];
 
         if (isset($this->error['warning'])) {
@@ -83,7 +83,7 @@ class ControllerAccountEdit extends Controller {
             $data['error_custom_field'] = [];
         }
 
-        $data['action'] = $this->url->link('account/edit', 'customer_token=' . $this->session->data['customer_token'], true);
+        $data['action'] = $this->url->link('account/edit', 'member_token=' . $this->session->data['member_token'], true);
 
         if ($this->request->server['REQUEST_METHOD'] != 'POST') {
             $customer_info = $this->model_account_customer->getCustomer($this->customer->getId());
@@ -163,7 +163,7 @@ class ControllerAccountEdit extends Controller {
             }
         }
 
-        $data['back'] = $this->url->link('account/account', 'customer_token=' . $this->session->data['customer_token'], true);
+        $data['back'] = $this->url->link('account/account', 'member_token=' . $this->session->data['member_token'], true);
 
         $data['column_left'] = $this->load->controller('common/column_left');
         $data['column_right'] = $this->load->controller('common/column_right');

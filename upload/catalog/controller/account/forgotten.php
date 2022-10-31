@@ -4,7 +4,7 @@ class ControllerAccountForgotten extends Controller {
 
     public function index(): void {
         if ($this->customer->isLogged()) {
-            $this->response->redirect($this->url->link('account/account', 'customer_token=' . $this->session->data['customer_token'], true));
+            $this->response->redirect($this->url->link('account/account', 'member_token=' . $this->session->data['member_token'], true));
         }
 
         $this->load->language('account/forgotten');

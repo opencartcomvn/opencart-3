@@ -3,7 +3,7 @@ class ControllerAccountPaymentMethod extends Controller {
     private array $error = [];
 
     public function index(): void {
-        if (!$this->customer->isLogged() || (!isset($this->request->get['customer_token']) || !isset($this->session->data['customer_token']) || ($this->request->get['customer_token'] != $this->session->data['customer_token']))) {
+        if (!$this->customer->isLogged() || (!isset($this->request->get['member_token']) || !isset($this->session->data['member_token']) || ($this->request->get['member_token'] != $this->session->data['member_token']))) {
             $this->session->data['redirect'] = $this->url->link('account/payment_method', '', true);
 
             $this->response->redirect($this->url->link('account/login', '', true));
@@ -30,7 +30,7 @@ class ControllerAccountPaymentMethod extends Controller {
             $customer_payment_id = 0;
         }
 
-        if (!$this->customer->isLogged() || (!isset($this->request->get['customer_token']) || !isset($this->session->data['customer_token']) || ($this->request->get['customer_token'] != $this->session->data['customer_token']))) {
+        if (!$this->customer->isLogged() || (!isset($this->request->get['member_token']) || !isset($this->session->data['member_token']) || ($this->request->get['member_token'] != $this->session->data['member_token']))) {
             $this->session->data['redirect'] = $this->url->link('account/payment_method', 'language=' . $this->config->get('config_language'));
 
             $json['redirect'] = $this->url->link('account/login', 'language=' . $this->config->get('config_language'), true);
@@ -60,7 +60,7 @@ class ControllerAccountPaymentMethod extends Controller {
 
             $this->session->data['success'] = $this->language->get('text_delete');
 
-            $json['success'] = str_replace('&amp;', '&', $this->url->link('account/payment_method', 'customer_token=' . $this->session->data['customer_token'], true));
+            $json['success'] = str_replace('&amp;', '&', $this->url->link('account/payment_method', 'member_token=' . $this->session->data['member_token'], true));
         }
 
         $this->response->addHeader('Content-Type: application/json');
@@ -77,12 +77,12 @@ class ControllerAccountPaymentMethod extends Controller {
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('text_account'),
-            'href' => $this->url->link('account/account', 'customer_token=' . $this->session->data['customer_token'], true)
+            'href' => $this->url->link('account/account', 'member_token=' . $this->session->data['member_token'], true)
         ];
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('heading_title'),
-            'href' => $this->url->link('account/payment_method', 'customer_token=' . $this->session->data['customer_token'], true)
+            'href' => $this->url->link('account/payment_method', 'member_token=' . $this->session->data['member_token'], true)
         ];
 
         if (isset($this->session->data['success'])) {
@@ -104,13 +104,13 @@ class ControllerAccountPaymentMethod extends Controller {
                 'image'               => $result['image'],
                 'type'                => $result['type'],
                 'date_expire'         => date('m-Y', strtotime($result['date_expire'])),
-                'delete'              => $this->url->link('account/payment_method/delete', 'customer_token=' . $this->session->data['customer_token'] . '&customer_payment_id=' . $result['customer_payment_id'], true)
+                'delete'              => $this->url->link('account/payment_method/delete', 'member_token=' . $this->session->data['member_token'] . '&customer_payment_id=' . $result['customer_payment_id'], true)
             ];
         }
 
-        $data['customer_token'] = $this->session->data['customer_token'];
+        $data['member_token'] = $this->session->data['member_token'];
 
-        $data['back'] = $this->url->link('account/account', 'customer_token=' . $this->session->data['customer_token'], true);
+        $data['back'] = $this->url->link('account/account', 'member_token=' . $this->session->data['member_token'], true);
 
         $data['column_left'] = $this->load->controller('common/column_left');
         $data['column_right'] = $this->load->controller('common/column_right');

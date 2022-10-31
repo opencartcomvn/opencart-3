@@ -3,7 +3,7 @@ class ControllerAccountAddress extends Controller {
     private array $error = [];
 
     public function index(): void {
-        if (!$this->customer->isLogged() || (!isset($this->request->get['customer_token']) || !isset($this->session->data['customer_token']) || ($this->request->get['customer_token'] != $this->session->data['customer_token']))) {
+        if (!$this->customer->isLogged() || (!isset($this->request->get['member_token']) || !isset($this->session->data['member_token']) || ($this->request->get['member_token'] != $this->session->data['member_token']))) {
             $this->session->data['redirect'] = $this->url->link('account/address', '', true);
 
             $this->response->redirect($this->url->link('account/login', '', true));
@@ -20,7 +20,7 @@ class ControllerAccountAddress extends Controller {
     }
 
     public function add(): void {
-        if (!$this->customer->isLogged() || (!isset($this->request->get['customer_token']) || !isset($this->session->data['customer_token']) || ($this->request->get['customer_token'] != $this->session->data['customer_token']))) {
+        if (!$this->customer->isLogged() || (!isset($this->request->get['member_token']) || !isset($this->session->data['member_token']) || ($this->request->get['member_token'] != $this->session->data['member_token']))) {
             $this->session->data['redirect'] = $this->url->link('account/address', '', true);
 
             $this->response->redirect($this->url->link('account/login', '', true));
@@ -44,14 +44,14 @@ class ControllerAccountAddress extends Controller {
 
             $this->session->data['success'] = $this->language->get('text_add');
 
-            $this->response->redirect($this->url->link('account/address', 'customer_token=' . $this->session->data['customer_token'], true));
+            $this->response->redirect($this->url->link('account/address', 'member_token=' . $this->session->data['member_token'], true));
         }
 
         $this->getForm();
     }
 
     public function edit(): void {
-        if (!$this->customer->isLogged() || (!isset($this->request->get['customer_token']) || !isset($this->session->data['customer_token']) || ($this->request->get['customer_token'] != $this->session->data['customer_token']))) {
+        if (!$this->customer->isLogged() || (!isset($this->request->get['member_token']) || !isset($this->session->data['member_token']) || ($this->request->get['member_token'] != $this->session->data['member_token']))) {
             $this->session->data['redirect'] = $this->url->link('account/address', '', true);
 
             $this->response->redirect($this->url->link('account/login', '', true));
@@ -91,7 +91,7 @@ class ControllerAccountAddress extends Controller {
 
             $this->session->data['success'] = $this->language->get('text_edit');
 
-            $this->response->redirect($this->url->link('account/address', 'customer_token=' . $this->session->data['customer_token'], true));
+            $this->response->redirect($this->url->link('account/address', 'member_token=' . $this->session->data['member_token'], true));
         }
 
         $this->getForm();
@@ -100,7 +100,7 @@ class ControllerAccountAddress extends Controller {
     public function delete(): void {
         $json = [];
 
-        if (!$this->customer->isLogged() || (!isset($this->request->get['customer_token']) || !isset($this->session->data['customer_token']) || ($this->request->get['customer_token'] != $this->session->data['customer_token']))) {
+        if (!$this->customer->isLogged() || (!isset($this->request->get['member_token']) || !isset($this->session->data['member_token']) || ($this->request->get['member_token'] != $this->session->data['member_token']))) {
             $this->session->data['redirect'] = $this->url->link('account/address', '', true);
 
             $json['redirect'] = str_replace('&amp;', '&', $this->url->link('account/login', '', true));
@@ -140,7 +140,7 @@ class ControllerAccountAddress extends Controller {
 
             $this->session->data['success'] = $this->language->get('text_delete');
 
-            $json['success'] = str_replace('&amp;', '&', $this->url->link('account/address', 'customer_token=' . $this->session->data['customer_token'], true));
+            $json['success'] = str_replace('&amp;', '&', $this->url->link('account/address', 'member_token=' . $this->session->data['member_token'], true));
         }
 
         $this->response->addHeader('Content-Type: application/json');
@@ -157,12 +157,12 @@ class ControllerAccountAddress extends Controller {
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('text_account'),
-            'href' => $this->url->link('account/account', 'customer_token=' . $this->session->data['customer_token'], true)
+            'href' => $this->url->link('account/account', 'member_token=' . $this->session->data['member_token'], true)
         ];
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('heading_title'),
-            'href' => $this->url->link('account/address', 'customer_token=' . $this->session->data['customer_token'], true)
+            'href' => $this->url->link('account/address', 'member_token=' . $this->session->data['member_token'], true)
         ];
 
         if (isset($this->session->data['success'])) {
@@ -181,15 +181,15 @@ class ControllerAccountAddress extends Controller {
             $data['addresses'][] = [
                 'address_id' => $result['address_id'],
                 'address'    => $result['address_format'],
-                'update'     => $this->url->link('account/address/edit', 'customer_token=' . $this->session->data['customer_token'] . '&address_id=' . $result['address_id'], true),
-                'delete'     => $this->url->link('account/address/delete', 'customer_token=' . $this->session->data['customer_token'] . '&address_id=' . $result['address_id'], true)
+                'update'     => $this->url->link('account/address/edit', 'member_token=' . $this->session->data['member_token'] . '&address_id=' . $result['address_id'], true),
+                'delete'     => $this->url->link('account/address/delete', 'member_token=' . $this->session->data['member_token'] . '&address_id=' . $result['address_id'], true)
             ];
         }
 
-        $data['customer_token'] = $this->session->data['customer_token'];
+        $data['member_token'] = $this->session->data['member_token'];
 
-        $data['add'] = $this->url->link('account/address/add', 'customer_token=' . $this->session->data['customer_token'], true);
-        $data['back'] = $this->url->link('account/account', 'customer_token=' . $this->session->data['customer_token'], true);
+        $data['add'] = $this->url->link('account/address/add', 'member_token=' . $this->session->data['member_token'], true);
+        $data['back'] = $this->url->link('account/account', 'member_token=' . $this->session->data['member_token'], true);
 
         $data['column_left'] = $this->load->controller('common/column_left');
         $data['column_right'] = $this->load->controller('common/column_right');
@@ -211,23 +211,23 @@ class ControllerAccountAddress extends Controller {
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('text_account'),
-            'href' => $this->url->link('account/account', 'customer_token=' . $this->session->data['customer_token'], true)
+            'href' => $this->url->link('account/account', 'member_token=' . $this->session->data['member_token'], true)
         ];
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('heading_title'),
-            'href' => $this->url->link('account/address', 'customer_token=' . $this->session->data['customer_token'], true)
+            'href' => $this->url->link('account/address', 'member_token=' . $this->session->data['member_token'], true)
         ];
 
         if (!isset($this->request->get['address_id'])) {
             $data['breadcrumbs'][] = [
                 'text' => $this->language->get('text_address_add'),
-                'href' => $this->url->link('account/address/add', 'customer_token=' . $this->session->data['customer_token'], true)
+                'href' => $this->url->link('account/address/add', 'member_token=' . $this->session->data['member_token'], true)
             ];
         } else {
             $data['breadcrumbs'][] = [
                 'text' => $this->language->get('text_address_edit'),
-                'href' => $this->url->link('account/address/edit', 'customer_token=' . $this->session->data['customer_token'] . '&address_id=' . $this->request->get['address_id'], true)
+                'href' => $this->url->link('account/address/edit', 'member_token=' . $this->session->data['member_token'] . '&address_id=' . $this->request->get['address_id'], true)
             ];
         }
 
@@ -282,9 +282,9 @@ class ControllerAccountAddress extends Controller {
         }
 
         if (!isset($this->request->get['address_id'])) {
-            $data['action'] = $this->url->link('account/address/add', 'customer_token=' . $this->session->data['customer_token'], true);
+            $data['action'] = $this->url->link('account/address/add', 'member_token=' . $this->session->data['member_token'], true);
         } else {
-            $data['action'] = $this->url->link('account/address/edit', 'customer_token=' . $this->session->data['customer_token'] . '&address_id=' . $this->request->get['address_id'], true);
+            $data['action'] = $this->url->link('account/address/edit', 'member_token=' . $this->session->data['member_token'] . '&address_id=' . $this->request->get['address_id'], true);
         }
 
         if (isset($this->request->get['address_id']) && ($this->request->server['REQUEST_METHOD'] != 'POST')) {
@@ -418,7 +418,7 @@ class ControllerAccountAddress extends Controller {
             $data['default'] = false;
         }
 
-        $data['back'] = $this->url->link('account/address', 'customer_token=' . $this->session->data['customer_token'], true);
+        $data['back'] = $this->url->link('account/address', 'member_token=' . $this->session->data['member_token'], true);
 
         $data['column_left'] = $this->load->controller('common/column_left');
         $data['column_right'] = $this->load->controller('common/column_right');
@@ -485,14 +485,14 @@ class ControllerAccountAddress extends Controller {
     public function editAddress(): void {
         $json = [];
 
-        if (!$this->customer->isLogged() || (!isset($this->request->get['customer_token']) || !isset($this->session->data['customer_token']) || ($this->request->get['customer_token'] != $this->session->data['customer_token']))) {
+        if (!$this->customer->isLogged() || (!isset($this->request->get['member_token']) || !isset($this->session->data['member_token']) || ($this->request->get['member_token'] != $this->session->data['member_token']))) {
             $this->session->data['redirect'] = $this->url->link('account/address', '', true);
 
             $json['redirect'] = str_replace('&amp;', '&', $this->url->link('account/login', '', true));
         }
 
         if (isset($this->request->get['address_id'])) {
-            $json['redirect'] = str_replace('&amp;', '&', $this->url->link('account/address/edit', 'customer_token=' . $this->session->data['customer_token'] . '&address_id=' . $this->request->get['address_id'], true));
+            $json['redirect'] = str_replace('&amp;', '&', $this->url->link('account/address/edit', 'member_token=' . $this->session->data['member_token'] . '&address_id=' . $this->request->get['address_id'], true));
         }
 
         $this->response->addHeader('Content-Type: application/json');
