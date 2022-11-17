@@ -47,7 +47,7 @@ class ControllerMailSubscription extends Controller {
         $subscription['status']
         */
 
-        if ($subscription['trial_duration'] && $subscription['trial_remaining']) {
+        if ($subscription['trial_status'] && $subscription['trial_duration'] && $subscription['trial_remaining']) {
             $date_next = date('Y-m-d', strtotime('+' . $subscription['trial_cycle'] . ' ' . $subscription['trial_frequency']));
         } elseif ($subscription['duration'] && $subscription['remaining']) {
             $date_next = date('Y-m-d', strtotime('+' . $subscription['cycle'] . ' ' . $subscription['frequency']));
@@ -247,6 +247,13 @@ class ControllerMailSubscription extends Controller {
 
                                             // Promotion
                                             if (property_exists($this->{'model_extension_payment_' . $payment_info['code']}, 'promotion')) {
+                                                /*
+                                                  * The extension must create a new order
+                                                  * The trial status and the status must
+                                                  * also be handled accordingly to complete
+                                                  * this transaction. It must not be charged
+                                                  * to the customer until the next billing cycle
+                                                */
                                                 $subscription_status_id = $this->{'model_extension_payment_' . $payment_info['code']}->promotion($value['subscription_id']);
 
                                                 if ($store_info) {
@@ -255,70 +262,100 @@ class ControllerMailSubscription extends Controller {
                                                     $config_subscription_active_status_id = $this->config->get('config_subscription_active_status_id');
                                                 }
 
+                                                // Transaction
                                                 if ($config_subscription_active_status_id == $subscription_status_id) {
-                                                    $subscription_info = $this->model_account_subscription->getSubscription($value['subscription_id']);
+                                                    $filter_data = [
+                                                        'filter_subscription_status_id' => $subscription_status_id,
+                                                        'start'                         => 0,
+                                                        'limit'                         => 1
+                                                    ];
 
-                                                    // Validate the latest subscription values with the ones edited
-                                                    // by promotional extensions
-                                                    if ($subscription_info && $subscription_info['status'] && $subscription_info['customer_id'] == $value['customer_id'] && $subscription_info['order_id'] == $value['order_id'] && $subscription_info['order_product_id'] == $value['order_product_id']) {
-                                                        $this->load->model('account/customer');
+                                                    $next_subscriptions = $this->model_account_subscription->getSubscriptions($filter_data);
 
-                                                        $customer_info = $this->model_account_customer->getCustomer($subscription_info['customer_id']);
+                                                    if ($next_subscriptions) {
+                                                        foreach ($next_subscriptions as $next_subscription) {
+                                                            // Validate the latest subscription values with the ones edited
+                                                            // by promotional extensions
+                                                            if ($next_subscription['subscription_id'] != $value['subscription_id'] && $subscription['customer_id'] == $value['customer_id'] && $value['customer_id'] == $next_subscription['customer_id']) {
+                                                                $this->load->model('account/customer');
 
-                                                        $frequencies = [
-                                                            'day',
-                                                            'week',
-                                                            'semi_month',
-                                                            'month',
-                                                            'year'
-                                                        ];
+                                                                $customer_info = $this->model_account_customer->getCustomer($next_subscription['customer_id']);
 
-                                                        // We need to validate frequencies in compliance of the admin subscription plans
-                                                        // as with the use of the APIs
-                                                        if ($customer_info && (int)$subscription_info['cycle'] >= 0 && $subscription_info['cycle'] == $value['cycle'] && in_array($subscription_info['frequency'], $frequencies)) {
-                                                            if ($subscription_info['frequency'] == 'semi_month') {
-                                                                $period = strtotime("2 weeks");
-                                                            } else {
-                                                                $period = strtotime($subscription_info['cycle'] . ' ' . $subscription_info['frequency']);
-                                                            }
+                                                                $frequencies = [
+                                                                    'day',
+                                                                    'week',
+                                                                    'semi_month',
+                                                                    'month',
+                                                                    'year'
+                                                                ];
 
-                                                            // New customer once the trial period has ended
-                                                            $customer_period = strtotime($customer_info['date_added']);
+                                                                // We need to validate frequencies in compliance of the admin subscription plans
+                                                                // as with the use of the APIs
+                                                                if ($customer_info && (int)$next_subscription['cycle'] >= 0 && in_array($next_subscription['frequency'], $frequencies)) {
+                                                                    if ($next_subscription['frequency'] == 'semi_month') {
+                                                                        $period = strtotime("2 weeks");
+                                                                    } else {
+                                                                        $period = strtotime($next_subscription['cycle'] . ' ' . $next_subscription['frequency']);
+                                                                    }
 
-                                                            $trial_period = 0;
-                                                            $validate_trial = 0;
+                                                                    // New customer once the trial period has ended
+                                                                    $customer_period = strtotime($customer_info['date_added']);
 
-                                                            // Trial
-                                                            if ($subscription_info['trial_cycle'] && $subscription_info['trial_frequency'] && $subscription_info['trial_cycle'] == $value['trial_cycle'] && $subscription_info['trial_frequency'] == $value['trial_frequency']) {
-                                                                if ($subscription_info['trial_frequency'] == 'semi_month') {
-                                                                    $trial_period = strtotime("2 weeks");
-                                                                } else {
-                                                                    $trial_period = strtotime($subscription_info['trial_cycle'] . ' ' . $subscription_info['trial_frequency']);
-                                                                }
+                                                                    $trial_period = 0;
+                                                                    $trial = 0;
 
-                                                                $trial_period = ($trial_period - $customer_period);
-                                                                $validate_trial = round($trial_period / (60 * 60 * 24));
-                                                            }
+                                                                    // Trial
+                                                                    if ($next_subscription['trial_status'] && (int)$next_subscription['trial_cycle'] >= 0 && in_array($next_subscription['trial_frequency'], $frequencies)) {
+                                                                        if ($next_subscription['trial_frequency'] == 'semi_month') {
+                                                                            $trial_period = strtotime("2 weeks");
+                                                                        } else {
+                                                                            $trial_period = strtotime($next_subscription['trial_cycle'] . ' ' . $next_subscription['trial_frequency']);
+                                                                        }
 
-                                                            // Calculates the remaining days between the subscription
-                                                            // promotional period and the date added period
-                                                            $period = ($period - $customer_period);
+                                                                        $trial_period = ($trial_period - $customer_period);
+                                                                        $trial = round($trial_period / (60 * 60 * 24));
+                                                                    }
 
-                                                            // Calculate remaining period of each features
-                                                            $period = round($period / (60 * 60 * 24));
+                                                                    // Calculates the remaining days between the subscription
+                                                                    // promotional period and the date added period
+                                                                    $period = ($period - $customer_period);
 
-                                                            // Promotional features description must be identical
-                                                            // until the time period has exceeded. Therefore, the current
-                                                            // period must be matched as well
-                                                            if (($period == 0 && ($validate_trial > 0 || !$validate_trial)) && $value['description'] == $description && $subscription_info['subscription_plan_id'] == $value['subscription_plan_id']) {
-                                                                // Products
-                                                                $this->load->model('catalog/product');
+                                                                    // Calculate remaining period of each features
+                                                                    $period = round($period / (60 * 60 * 24));
 
-                                                                $product_subscription_info = $this->model_catalog_product->getSubscription($order_product['product_id'], $subscription_info['subscription_plan_id']);
+                                                                    // Promotional subscription plans for full membership must be identical
+                                                                    // until the time period has exceeded. Therefore, we need to match the
+                                                                    // cycle period with the current time period
+                                                                    if ($next_subscription['status'] && ($period >= 0 && $period <= $next_subscription['cycle']) && ($trial == 0 && !$next_subscription['trial_status']) && $subscription['subscription_plan_id'] == $value['subscription_plan_id'] && $value['subscription_plan_id'] == $next_subscription['subscription_plan_id']) {
+                                                                        // Products
+                                                                        $this->load->model('catalog/product');
 
-                                                                if ($product_subscription_info) {
-                                                                    // For the next billing cycle
-                                                                    $this->model_account_subscription->addTransaction($value['subscription_id'], $value['order_id'], $this->language->get('text_promotion'), $subscription_info['amount'], $subscription_info['type'], $subscription_info['payment_method'], $subscription_info['payment_code']);
+                                                                        $product_subscription_info = $this->model_catalog_product->getSubscription($order_product['product_id'], $next_subscription['subscription_plan_id']);
+
+                                                                        if ($product_subscription_info) {
+                                                                            // Adds the current amount in order for promotional subscription extensions
+                                                                            // to balance the new transaction amount to reflect the change on the next
+                                                                            // billing cycle
+                                                                            $transactions = $this->model_account_subscription->getTransactions($next_subscription['subscription_id']);
+
+                                                                            if ($transactions) {
+                                                                                if ($next_subscription['duration'] && $next_subscription['remaining']) {
+                                                                                    $date_next = strtotime('+' . $next_subscription['cycle'] . ' ' . $next_subscription['frequency']);
+                                                                                }
+
+                                                                                $dates = array_column($transactions, 'date_added');
+
+                                                                                $date_added = max($dates);
+                                                                                $date_added = strtotime($date_added);
+
+                                                                                foreach ($transactions as $transaction) {
+                                                                                    if (strtotime($transaction['date_added']) == $date_added && $date_added != $date_next && $transaction['payment_method'] == $order_info['payment_method'] && $transaction['payment_code'] == $order_info['payment_code']) {
+                                                                                        $this->model_account_subscription->addTransaction($next_subscription['subscription_id'], $next_subscription['order_id'], $language->get('text_promotion'), 0, $transaction['type'], $transaction['payment_method'], $transaction['payment_code']);
+                                                                                    }
+                                                                                }
+                                                                            }
+                                                                        }
+                                                                    }
                                                                 }
                                                             }
                                                         }
