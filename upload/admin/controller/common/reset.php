@@ -29,7 +29,6 @@ class ControllerCommonReset extends Controller {
 
             if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
                 $this->model_user_user->editPassword($user_info['user_id'], $this->request->post['password']);
-                $this->model_user_user->deleteLoginAttempts($user_info['username']);
 
                 $this->session->data['success'] = $this->language->get('text_success');
 
@@ -92,7 +91,7 @@ class ControllerCommonReset extends Controller {
     }
 
     protected function validate() {
-        if ((oc_strlen(html_entity_decode($this->request->post['password'], ENT_QUOTES, 'UTF-8')) < 4) || (oc_strlen(html_entity_decode($this->request->post['password'], ENT_QUOTES, 'UTF-8')) > 40)) {
+        if ((oc_strlen(html_entity_decode($this->request->post['password'], ENT_QUOTES, 'UTF-8')) < 4) || (oc_strlen(html_entity_decode($this->request->post['password'], ENT_QUOTES, 'UTF-8')) > 255)) {
             $this->error['password'] = $this->language->get('error_password');
         }
 

@@ -778,7 +778,7 @@ class ModelExtensionPaymentAmazonLoginPay extends Model {
 
     public function getZoneInfo($amazon_address, $country_info) {
         if (!empty($amazon_address->StateOrRegion)) {
-            $sql = "SELECT `zone_id`, `code`, `name` FROM `" . DB_PREFIX . "zone` WHERE (LCASE(`name`) LIKE '" . $this->db->escape(oc_strtolower($amazon_address->StateOrRegion)) . "' OR LCASE(`code`) LIKE '" . $this->db->escape(strtolower($amazon_address->StateOrRegion)) . "') AND `country_id` = '" . (int)$country_info['country_id'] . "' LIMIT 1";
+            $sql = "SELECT `zone_id`, `code`, `name` FROM `" . DB_PREFIX . "zone` WHERE (LOWER(`name`) LIKE '" . $this->db->escape(oc_strtolower($amazon_address->StateOrRegion)) . "' OR LCASE(`code`) LIKE '" . $this->db->escape(strtolower($amazon_address->StateOrRegion)) . "') AND `country_id` = '" . (int)$country_info['country_id'] . "' LIMIT 1";
             $result = $this->db->query($sql);
 
             if ($result->num_rows > 0) {

@@ -28,6 +28,8 @@ class ControllerAccountLogin extends Controller {
             $customer_info = $this->model_account_customer->getCustomerByToken($this->request->get['token']);
 
             if ($customer_info && $this->customer->login($customer_info['email'], '', true)) {
+                $this->session->data['customer_token'] = oc_token(26);
+
                 // Default Addresses
                 $this->load->model('account/address');
 
@@ -191,10 +193,13 @@ class ControllerAccountLogin extends Controller {
 
                 $this->model_account_customer->addLoginAttempt($this->request->post['email']);
             } else {
+                $this->model_account_customer->addLogin($this->customer->getId(), $this->request->server['REMOTE_ADDR']);
+
                 // Create customer token
                 $this->session->data['customer_token'] = oc_token(26);
 
                 $this->model_account_customer->deleteLoginAttempts($this->request->post['email']);
+
             }
         }
 

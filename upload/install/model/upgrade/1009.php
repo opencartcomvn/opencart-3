@@ -21,7 +21,7 @@ class ModelUpgrade1009 extends Model {
                 $customer_query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "customer` WHERE `email` = '" . $this->db->escape($affiliate['email']) . "'");
 
                 if (!$customer_query->num_rows) {
-                    $this->db->query("INSERT INTO `" . DB_PREFIX . "customer` SET `customer_group_id` = '" . (int)$config->get('config_customer_group_id') . "', `language_id` = '" . (int)$config->get('config_customer_group_id') . "', `firstname` = '" . $this->db->escape($affiliate['firstname']) . "', `lastname` = '" . $this->db->escape($affiliate['lastname']) . "', `email` = '" . $this->db->escape($affiliate['email']) . "', `telephone` = '" . $this->db->escape($affiliate['telephone']) . "', `password` = '" . $this->db->escape($affiliate['password']) . "', `salt` = '" . $this->db->escape($affiliate['salt']) . "', `cart` = '" . $this->db->escape('') . "', `wishlist` = '" . $this->db->escape('') . "', `newsletter` = '0', `custom_field` = '" . $this->db->escape('') . "', `ip` = '" . $this->db->escape($affiliate['ip']) . "', `status` = '" . $this->db->escape($affiliate['status']) . "', `approved` = '" . (int)$affiliate['approved'] . "', `date_added` = '" . $this->db->escape($affiliate['date_added']) . "'");
+                    $this->db->query("INSERT INTO `" . DB_PREFIX . "customer` SET `customer_group_id` = '" . (int)$config->get('config_customer_group_id') . "', `language_id` = '" . (int)$config->get('config_customer_group_id') . "', `firstname` = '" . $this->db->escape($affiliate['firstname']) . "', `lastname` = '" . $this->db->escape($affiliate['lastname']) . "', `email` = '" . $this->db->escape($affiliate['email']) . "', `telephone` = '" . $this->db->escape($affiliate['telephone']) . "', `password` = '" . $this->db->escape($affiliate['password']) . "', `cart` = '" . $this->db->escape('') . "', `wishlist` = '" . $this->db->escape('') . "', `newsletter` = '0', `custom_field` = '" . $this->db->escape('') . "', `ip` = '" . $this->db->escape($affiliate['ip']) . "', `status` = '" . $this->db->escape($affiliate['status']) . "', `approved` = '" . (int)$affiliate['approved'] . "', `date_added` = '" . $this->db->escape($affiliate['date_added']) . "'");
 
                     $customer_id = $this->db->getLastId();
 
@@ -289,6 +289,57 @@ class ModelUpgrade1009 extends Model {
 
             $this->db->query("ALTER TABLE `" . DB_PREFIX . "cart` DROP COLUMN `recurring_id`");
             $this->db->query("ALTER TABLE `" . DB_PREFIX . "cart` ADD COLUMN `subscription_plan_id` int(11) NOT NULL AFTER `product_id`");
+        }
+
+        // Addresses
+        $query = $this->db->query("SELECT * FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = '" . DB_DATABASE . "' AND TABLE_NAME = '" . DB_PREFIX . "address' AND COLUMN_NAME = 'default'");
+
+        if (!$query->num_rows) {
+            $this->db->query("ALTER TABLE `" . DB_PREFIX . "address` ADD COLUMN `default` tinyint(1) NOT NULL AFTER `custom_field`");
+        }
+
+        // Customer IP
+        $query = $this->db->query("SELECT * FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = '" . DB_DATABASE . "' AND TABLE_NAME = '" . DB_PREFIX . "customer_ip' AND COLUMN_NAME = 'store_id'");
+
+        if (!$query->num_rows) {
+            $this->db->query("ALTER TABLE `" . DB_PREFIX . "customer_ip` ADD COLUMN `store_id` int(11) NOT NULL AFTER `customer_id`");
+            $this->db->query("ALTER TABLE `" . DB_PREFIX . "customer_ip` ADD COLUMN `country` varchar(2) NOT NULL AFTER `ip`");
+        }
+
+        // Drop Fields
+        $remove = [];
+
+        $remove[] = [
+            'table' => 'customer',
+            'field' => 'salt'
+        ];
+
+        $remove[] = [
+            'table' => 'user',
+            'field' => 'salt'
+        ];
+
+        $remove[] = [
+            'table' => 'user_login',
+            'field' => 'token'
+        ];
+
+        $remove[] = [
+            'table' => 'user_login',
+            'field' => 'total'
+        ];
+
+        $remove[] = [
+            'table' => 'user_login',
+            'field' => 'status'
+        ];
+
+        foreach ($remove as $result) {
+            $query = $this->db->query("SELECT * FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = '" . DB_DATABASE . "' AND TABLE_NAME = '" . DB_PREFIX . $result['table'] . "' AND COLUMN_NAME = '" . $result['field'] . "'");
+
+            if ($query->num_rows) {
+                $this->db->query("ALTER TABLE `" . DB_PREFIX . $result['table'] . "` DROP `" . $result['field'] . "`");
+            }
         }
 
         // OPENCART_SERVER

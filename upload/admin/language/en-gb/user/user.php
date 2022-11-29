@@ -7,10 +7,13 @@ $_['text_success']          = 'Success: You have modified users!';
 $_['text_list']             = 'User List';
 $_['text_add']              = 'Add User';
 $_['text_edit']             = 'Edit User';
+$_['text_login']            = 'Login History';
 
 // Column
 $_['column_username']       = 'Username';
 $_['column_status']         = 'Status';
+$_['column_ip']             = 'IP';
+$_['column_user_agent']     = 'User Agent';
 $_['column_date_added']     = 'Date Added';
 $_['column_action']         = 'Action';
 
