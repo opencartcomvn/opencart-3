@@ -222,7 +222,7 @@ class ModelUpgrade1009 extends Model {
         $query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "setting` WHERE `key` = 'config_affiliate_expire'");
 
         if (!$query->num_rows) {
-            $this->db->query("INSERT INTO `" . DB_PREFIX . "setting` SET `store_id` = '0', `code` = 'config', `key` = 'config_affiliate_expire', `value` = '86400', `serialized` = '0'");
+            $this->db->query("INSERT INTO `" . DB_PREFIX . "setting` SET `store_id` = '0', `code` = 'config', `key` = 'config_affiliate_expire', `value` = '3600000000', `serialized` = '0'");
         }
 
         // Config Subscriptions
@@ -314,6 +314,14 @@ class ModelUpgrade1009 extends Model {
             $this->db->query("ALTER TABLE `" . DB_PREFIX . "address` ADD COLUMN `default` tinyint(1) NOT NULL AFTER `custom_field`");
         }
 
+        // Coupon - uses_customer
+        $query = $this->db->query("SELECT * FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = '" . DB_DATABASE . "' AND TABLE_NAME = '" . DB_PREFIX . "coupon' AND COLUMN_NAME = 'uses_customer' AND DATA_TYPE = 'varchar'");
+
+        if ($query->num_rows) {
+            $this->db->query("ALTER TABLE `" . DB_PREFIX . "coupon` DROP COLUMN `uses_customer`");
+            $this->db->query("ALTER TABLE `" . DB_PREFIX . "coupon` ADD COLUMN `uses_customer` int(11) NOT NULL AFTER `uses_total`");
+        }
+
         // Customer IP
         $query = $this->db->query("SELECT * FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = '" . DB_DATABASE . "' AND TABLE_NAME = '" . DB_PREFIX . "customer_ip' AND COLUMN_NAME = 'store_id'");
 
@@ -342,19 +350,6 @@ class ModelUpgrade1009 extends Model {
 
         if (!$query->num_rows) {
             $this->db->query("INSERT INTO `" . DB_PREFIX . "setting` SET `store_id` = '0', `code` = 'config', `key` = 'config_timezone', `value` = 'UTC', `serialized` = '0'");
-        }
-
-        // Theme
-        $query = $this->db->query("SELECT `setting_id` FROM `" . DB_PREFIX . "setting` WHERE `value` = 'theme_default'");
-
-        if ($query->num_rows) {
-            $this->db->query("UPDATE `" . DB_PREFIX . "setting` SET `value` = 'default' WHERE `value` = 'theme_default'");
-        }
-
-        $query = $this->db->query("SELECT `extension_id` FROM `" . DB_PREFIX . "extension` WHERE `code` = 'theme_default'");
-
-        if ($query->num_rows) {
-            $this->db->query("UPDATE `" . DB_PREFIX . "extension` SET `code` = 'default' WHERE `code` = 'theme_default'");
         }
 
         // Report - Marketing
